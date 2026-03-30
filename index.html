@@ -6,264 +6,290 @@
 <title>Directorio de Manuales — Taller</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0f1117; --bg2:#161a24; --bg3:#1e2332; --border:#2a3045;
-  --accent:#e8a020; --accent2:#f0c060; --text:#e8eaf2;
-  --muted:#6b7494; --muted2:#9aa3c2;
-  --danger:#e05050; --success:#40c080; --teal:#30b0d0;
-  --mod-mec:#e8a020; --mod-tec:#30b0d0;
+:root{
+  --bg:#0f1117;--bg2:#161a24;--bg3:#1e2332;--border:#2a3045;
+  --accent:#e8a020;--accent2:#f0c060;--text:#e8eaf2;
+  --muted:#6b7494;--muted2:#9aa3c2;
+  --danger:#e05050;--success:#40c080;--teal:#30b0d0;
+  --mod-mec:#e8a020;--mod-tec:#30b0d0;
+  --sidebar-w:270px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.5;}
-
-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;}
-.logo{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.3rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text);}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.5;overflow-x:hidden;}
+ 
+/* ── HEADER ── */
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:200;}
+.header-left{display:flex;align-items:center;gap:10px;}
+.btn-sidebar-toggle{background:transparent;border:1px solid var(--border);color:var(--muted2);width:34px;height:34px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:1rem;}
+.btn-sidebar-toggle:hover{border-color:var(--accent);color:var(--accent);}
+.logo{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.25rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text);}
 .logo span{color:var(--accent);}
-.header-right{display:flex;align-items:center;gap:10px;}
-.admin-indicator{display:none;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(232,160,32,.12);border:1px solid rgba(232,160,32,.3);padding:4px 12px;border-radius:3px;}
+.header-right{display:flex;align-items:center;gap:8px;}
+.admin-indicator{display:none;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(232,160,32,.12);border:1px solid rgba(232,160,32,.3);padding:4px 10px;border-radius:3px;}
 .admin-indicator.visible{display:flex;}
 .admin-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
-.btn-header{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--muted2);border-radius:4px;cursor:pointer;transition:all .2s;}
+.btn-header{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--border);background:transparent;color:var(--muted2);border-radius:4px;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .btn-header:hover{border-color:var(--accent);color:var(--accent);}
+.btn-header.active-admin{background:rgba(232,160,32,.12);border-color:rgba(232,160,32,.4);color:var(--accent);}
 .btn-header.danger:hover{border-color:var(--danger);color:var(--danger);}
-
-.app{display:flex;min-height:calc(100vh - 60px);}
-
-aside{width:270px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.module-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
-.module-tab{padding:14px 8px;text-align:center;cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:all .2s;border-bottom:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:5px;line-height:1.2;}
-.module-tab .tab-icon{font-size:1.1rem;}
+ 
+/* ── LAYOUT ── */
+.app{display:flex;height:calc(100vh - 56px);overflow:hidden;}
+ 
+/* ── SIDEBAR ── */
+aside{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:width .25s ease, opacity .25s ease;
+  position:relative;
+}
+aside.collapsed{width:0;border-right:none;opacity:0;pointer-events:none;}
+ 
+/* Mobile: sidebar como drawer overlay */
+@media(max-width:768px){
+  aside{
+    position:fixed;top:56px;left:0;
+    height:calc(100vh - 56px);z-index:150;
+    width:var(--sidebar-w);
+    transform:translateX(0);
+    transition:transform .25s ease;
+    box-shadow:4px 0 24px rgba(0,0,0,.4);
+  }
+  aside.collapsed{width:var(--sidebar-w);opacity:1;pointer-events:auto;transform:translateX(-100%);}
+  .sidebar-backdrop{display:block;}
+}
+.sidebar-backdrop{display:none;position:fixed;inset:0;top:56px;background:rgba(0,0,0,.5);z-index:140;}
+.sidebar-backdrop.visible{display:block;}
+ 
+.module-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);flex-shrink:0;}
+.module-tab{padding:12px 8px;text-align:center;cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:all .2s;border-bottom:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.2;white-space:nowrap;}
+.module-tab .tab-icon{font-size:1rem;}
 .module-tab:hover{color:var(--text);background:var(--bg3);}
 .module-tab.active-mec{color:var(--mod-mec);border-bottom-color:var(--mod-mec);background:rgba(232,160,32,.06);}
 .module-tab.active-tec{color:var(--mod-tec);border-bottom-color:var(--mod-tec);background:rgba(48,176,208,.06);}
 .sidebar-panel{display:none;flex-direction:column;flex:1;overflow-y:auto;}
 .sidebar-panel.active{display:flex;}
-.sidebar-label{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:1rem 1.25rem .4rem;}
-.brand-btn{display:flex;align-items:center;gap:10px;width:100%;padding:9px 1.25rem;background:transparent;border:none;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:500;text-align:left;cursor:pointer;transition:all .15s;position:relative;}
+.sidebar-label{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:.9rem 1.25rem .35rem;}
+.brand-btn{display:flex;align-items:center;gap:10px;width:100%;padding:8px 1.25rem;background:transparent;border:none;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:500;text-align:left;cursor:pointer;transition:all .15s;}
 .brand-btn:hover{background:var(--bg3);color:var(--text);}
 .brand-btn.active-mec{background:var(--bg3);color:var(--mod-mec);border-left:3px solid var(--mod-mec);}
 .brand-btn.active-tec{background:var(--bg3);color:var(--mod-tec);border-left:3px solid var(--mod-tec);}
-.brand-icon{width:28px;height:28px;border-radius:4px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;color:var(--muted2);flex-shrink:0;border:1px solid var(--border);text-transform:uppercase;}
+.brand-icon{width:26px;height:26px;border-radius:4px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;color:var(--muted2);flex-shrink:0;border:1px solid var(--border);text-transform:uppercase;}
 .brand-btn.active-mec .brand-icon{background:rgba(232,160,32,.15);color:var(--mod-mec);border-color:rgba(232,160,32,.4);}
 .brand-btn.active-tec .brand-icon{background:rgba(48,176,208,.15);color:var(--mod-tec);border-color:rgba(48,176,208,.4);}
 .brand-name-text{flex:1;}
-.btn-del-brand{display:none;margin-left:auto;padding:2px 6px;background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;border-radius:3px;transition:all .15s;flex-shrink:0;}
+.btn-del-brand{display:none;padding:2px 5px;background:transparent;border:none;color:var(--muted);font-size:.8rem;cursor:pointer;border-radius:3px;transition:all .15s;flex-shrink:0;}
 .btn-del-brand:hover{color:var(--danger);}
-.admin-active .btn-del-brand{display:flex;align-items:center;justify-content:center;}
+.admin-active .btn-del-brand{display:flex;align-items:center;}
 .models-menu{display:none;background:var(--bg);}
 .models-menu.open{display:block;}
 .model-row{display:flex;align-items:center;}
-.model-btn{display:flex;align-items:center;gap:8px;flex:1;padding:7px 1.25rem 7px 3rem;background:transparent;border:none;color:var(--muted);font-family:'Barlow',sans-serif;font-size:.85rem;text-align:left;cursor:pointer;transition:all .15s;}
+.model-btn{display:flex;align-items:center;gap:8px;flex:1;padding:6px 1.25rem 6px 2.8rem;background:transparent;border:none;color:var(--muted);font-family:'Barlow',sans-serif;font-size:.83rem;text-align:left;cursor:pointer;transition:all .15s;}
 .model-btn:hover{color:var(--text);}
 .model-btn.active{color:var(--mod-mec);}
 .model-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.5;}
 .model-btn.active .model-dot{opacity:1;}
-.btn-del-model{display:none;padding:4px 8px;background:transparent;border:none;color:var(--muted);font-size:.8rem;cursor:pointer;transition:all .15s;flex-shrink:0;margin-right:8px;}
+.btn-del-model{display:none;padding:4px 7px;background:transparent;border:none;color:var(--muted);font-size:.78rem;cursor:pointer;transition:all .15s;flex-shrink:0;margin-right:6px;}
 .btn-del-model:hover{color:var(--danger);}
 .admin-active .btn-del-model{display:flex;}
-.sidebar-divider{border:none;border-top:1px solid var(--border);margin:.5rem 0;}
-.btn-add-new{display:none;align-items:center;gap:10px;width:100%;padding:9px 1.25rem;background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.04em;text-align:left;cursor:pointer;transition:all .15s;}
+.sidebar-divider{border:none;border-top:1px solid var(--border);margin:.4rem 0;}
+.btn-add-new{display:none;align-items:center;gap:10px;width:100%;padding:8px 1.25rem;background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.04em;text-align:left;cursor:pointer;transition:all .15s;}
 .btn-add-new:hover{color:var(--text);background:var(--bg3);}
-.btn-add-new .add-icon{width:28px;height:28px;border-radius:4px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--muted);flex-shrink:0;}
+.btn-add-new .add-icon{width:26px;height:26px;border-radius:4px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--muted);flex-shrink:0;}
 .btn-add-new:hover .add-icon{border-color:var(--muted2);color:var(--text);}
 .admin-active .btn-add-new{display:flex;}
-
-main{flex:1;overflow-y:auto;}
-.module-bar{height:3px;background:var(--mod-mec);transition:background .3s;}
+ 
+/* ── MAIN ── */
+main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
+.module-bar{height:3px;background:var(--mod-mec);transition:background .3s;flex-shrink:0;}
 .module-bar.tec{background:var(--mod-tec);}
-.search-bar{padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2);flex-wrap:wrap;}
+.search-bar{padding:.85rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg2);flex-wrap:wrap;flex-shrink:0;}
 .search-icon{color:var(--muted);flex-shrink:0;}
-.search-input{flex:1;min-width:160px;background:transparent;border:none;outline:none;color:var(--text);font-family:'Barlow',sans-serif;font-size:.95rem;}
+.search-input{flex:1;min-width:120px;background:transparent;border:none;outline:none;color:var(--text);font-family:'Barlow',sans-serif;font-size:.92rem;}
 .search-input::placeholder{color:var(--muted);}
-.filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
-.pill{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;}
+.filter-pills{display:flex;gap:5px;flex-wrap:wrap;}
+.pill{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;}
 .pill:hover{border-color:var(--muted2);color:var(--text);}
 .pill.active-all-mec{background:rgba(232,160,32,.12);border-color:var(--mod-mec);color:var(--mod-mec);}
 .pill.active-all-tec{background:rgba(48,176,208,.12);border-color:var(--mod-tec);color:var(--mod-tec);}
 .pill.active-despiece{background:rgba(224,80,80,.12);border-color:var(--danger);color:var(--danger);}
 .pill.active-tecnico{background:rgba(48,176,208,.12);border-color:var(--teal);color:var(--teal);}
 .pill.active-mecanico{background:rgba(64,192,128,.12);border-color:var(--success);color:var(--success);}
-.breadcrumb{padding:1rem 2rem 0;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.breadcrumb{padding:.85rem 1.5rem 0;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0;}
 .breadcrumb strong{color:var(--text);font-weight:600;}
 .breadcrumb .sep{color:var(--border);}
-.mod-badge{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px;}
+.mod-badge{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;}
 .mod-badge.mec{background:rgba(232,160,32,.15);color:var(--mod-mec);border:1px solid rgba(232,160,32,.3);}
 .mod-badge.tec{background:rgba(48,176,208,.15);color:var(--mod-tec);border:1px solid rgba(48,176,208,.3);}
-.grid-header{padding:.75rem 2rem;display:flex;align-items:center;justify-content:space-between;}
-.grid-title{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;color:var(--text);}
-.grid-count{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg3);border:1px solid var(--border);padding:3px 10px;border-radius:3px;}
-.manuals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;border-top:1px solid var(--border);}
-.manual-card{background:var(--bg2);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.25rem 1.5rem;transition:background .15s;display:flex;flex-direction:column;gap:10px;}
+.grid-header{padding:.65rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.grid-title{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;color:var(--text);}
+.grid-count{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg3);border:1px solid var(--border);padding:2px 9px;border-radius:3px;}
+.manuals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1px;border-top:1px solid var(--border);}
+.manual-card{background:var(--bg2);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.1rem 1.35rem;transition:background .15s;display:flex;flex-direction:column;gap:9px;}
 .manual-card:hover{background:var(--bg3);}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-.card-type-badge{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;flex-shrink:0;}
+.card-type-badge{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:2px;flex-shrink:0;}
 .badge-despiece{background:rgba(224,80,80,.15);color:var(--danger);border:1px solid rgba(224,80,80,.3);}
 .badge-tecnico{background:rgba(48,176,208,.15);color:var(--teal);border:1px solid rgba(48,176,208,.3);}
 .badge-mecanico{background:rgba(64,192,128,.15);color:var(--success);border:1px solid rgba(64,192,128,.3);}
-.card-file-icon{font-size:1.4rem;flex-shrink:0;}
-.card-title{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);line-height:1.3;}
-.card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.meta-item{font-size:.78rem;color:var(--muted);}
-
-/* Card con link real: indicador visual */
-.card-has-link .card-title::after{content:' ↗';font-size:.8rem;color:var(--muted);font-weight:400;}
-
-.card-actions{display:flex;gap:8px;margin-top:4px;}
-.btn-view,.btn-dl{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:3px;cursor:pointer;border:1px solid var(--border);transition:all .15s;flex:1;text-align:center;}
+.card-file-icon{font-size:1.3rem;flex-shrink:0;}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:600;color:var(--text);line-height:1.3;}
+.card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.meta-item{font-size:.75rem;color:var(--muted);}
+.card-actions{display:flex;gap:7px;margin-top:3px;}
+.btn-view,.btn-dl{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:3px;cursor:pointer;border:1px solid var(--border);transition:all .15s;flex:1;text-align:center;}
 .btn-view{background:rgba(232,160,32,.1);color:var(--accent);border-color:rgba(232,160,32,.3);}
 .btn-view:hover{background:rgba(232,160,32,.2);}
-.btn-view:disabled{opacity:.35;cursor:not-allowed;}
+.btn-view:disabled,.btn-dl:disabled{opacity:.3;cursor:not-allowed;}
 .btn-dl{background:transparent;color:var(--muted2);}
 .btn-dl:hover{border-color:var(--muted2);color:var(--text);}
-.btn-dl:disabled{opacity:.35;cursor:not-allowed;}
-.card-admin-actions{display:none;gap:6px;margin-top:2px;}
+.card-admin-actions{display:none;gap:6px;}
 .admin-active .card-admin-actions{display:flex;}
-.btn-card-edit,.btn-card-del{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;transition:all .15s;flex:1;text-align:center;}
+.btn-card-edit,.btn-card-del{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:3px;cursor:pointer;transition:all .15s;flex:1;text-align:center;}
 .btn-card-edit{background:transparent;border:1px solid var(--border);color:var(--muted2);}
 .btn-card-edit:hover{border-color:var(--mod-tec);color:var(--mod-tec);}
 .btn-card-del{background:transparent;border:1px solid var(--border);color:var(--muted);}
 .btn-card-del:hover{background:rgba(224,80,80,.1);border-color:var(--danger);color:var(--danger);}
-.empty-state{padding:4rem 2rem;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;grid-column:1/-1;}
-
-/* ── VISOR MODAL ── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.92);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.empty-state{padding:4rem 2rem;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;grid-column:1/-1;}
+ 
+/* ── VISOR — ocupa casi todo el viewport ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(8,10,16,.96);z-index:500;align-items:stretch;justify-content:stretch;padding:0;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:960px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;}
-.modal-sm{max-width:440px;}
-.modal-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-shrink:0;}
-.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);flex:1;}
+.modal-overlay.centered{align-items:center;justify-content:center;padding:1rem;background:rgba(10,12,20,.92);}
+.modal-full{background:var(--bg2);border:1px solid var(--border);display:flex;flex-direction:column;width:100%;height:100%;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:480px;overflow:hidden;}
+.modal-lg{max-width:560px;}
+.modal-header{padding:.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-shrink:0;}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .modal-title.mec{color:var(--mod-mec);}
 .modal-title.tec{color:var(--mod-tec);}
 .modal-title.danger-color{color:var(--danger);}
-.modal-close{background:transparent;border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:4px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.modal-close{background:transparent;border:1px solid var(--border);color:var(--muted);width:28px;height:28px;border-radius:4px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
 .modal-close:hover{border-color:var(--danger);color:var(--danger);}
-
-/* Visor de PDF */
-.viewer-body{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;}
-.viewer-toolbar{padding:.6rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--bg3);}
-.viewer-badge{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;background:rgba(64,192,128,.15);color:var(--success);border:1px solid rgba(64,192,128,.3);}
-.viewer-badge.no-link{background:rgba(224,80,80,.1);color:var(--muted);border-color:var(--border);}
-.viewer-filename{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;color:var(--muted2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.btn-toolbar{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);transition:all .15s;white-space:nowrap;}
+ 
+/* Visor toolbar */
+.viewer-toolbar{padding:.55rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;background:var(--bg3);}
+.viewer-badge{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;}
+.viewer-badge.ok{background:rgba(64,192,128,.15);color:var(--success);border:1px solid rgba(64,192,128,.3);}
+.viewer-badge.no{background:rgba(107,116,148,.12);color:var(--muted);border:1px solid var(--border);}
+.viewer-filename{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;color:var(--muted2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.btn-toolbar{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);transition:all .15s;white-space:nowrap;flex-shrink:0;}
 .btn-toolbar:hover{border-color:var(--accent);color:var(--accent);}
 .btn-toolbar.primary{background:rgba(232,160,32,.12);color:var(--accent);border-color:rgba(232,160,32,.3);}
 .btn-toolbar.primary:hover{background:rgba(232,160,32,.22);}
-.viewer-frame-wrap{flex:1;position:relative;min-height:0;}
-.viewer-iframe{width:100%;height:100%;border:none;display:block;}
+ 
+/* Iframe ocupa todo el espacio disponible */
+.viewer-frame-wrap{flex:1;position:relative;overflow:hidden;}
+.viewer-iframe{position:absolute;inset:0;width:100%;height:100%;border:none;display:block;}
 .viewer-nolink{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1rem;color:var(--muted);padding:2rem;text-align:center;}
 .viewer-nolink-icon{font-size:3rem;}
 .viewer-nolink-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--muted2);}
-.viewer-nolink-text{font-size:.88rem;line-height:1.6;max-width:400px;}
-.viewer-nolink-hint{font-size:.78rem;color:var(--border);background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:4px;font-family:monospace;}
-
-.modal-body-pad{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
-
-/* Form */
-.form-row{display:flex;flex-direction:column;gap:6px;}
-.form-label{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-.form-label span{color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:.72rem;}
-.form-input,.form-select,.form-textarea{background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Barlow',sans-serif;font-size:.9rem;padding:8px 12px;outline:none;transition:border-color .15s;width:100%;}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);}
+.viewer-nolink-text{font-size:.86rem;line-height:1.6;max-width:400px;}
+ 
+/* Modal body (forms) */
+.modal-body-pad{padding:1.25rem;display:flex;flex-direction:column;gap:.9rem;overflow-y:auto;}
+.form-row{display:flex;flex-direction:column;gap:5px;}
+.form-label{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.form-label small{color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:.7rem;}
+.form-input,.form-select{background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Barlow',sans-serif;font-size:.88rem;padding:7px 11px;outline:none;transition:border-color .15s;width:100%;}
+.form-input:focus,.form-select:focus{border-color:var(--accent);}
 .form-select option{background:var(--bg3);}
-.form-textarea{resize:vertical;min-height:60px;font-family:monospace;font-size:.82rem;}
-.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-
-/* Link helper box */
-.link-helper{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1rem;display:flex;flex-direction:column;gap:8px;}
-.link-helper-title{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-.link-step{display:flex;align-items:flex-start;gap:10px;font-size:.82rem;color:var(--muted2);}
-.link-step-num{width:20px;height:20px;border-radius:50%;background:rgba(232,160,32,.15);color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.link-preview{display:none;margin-top:4px;padding:8px 10px;background:rgba(64,192,128,.08);border:1px solid rgba(64,192,128,.25);border-radius:4px;font-size:.78rem;color:var(--success);font-family:monospace;word-break:break-all;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.link-preview{display:none;margin-top:3px;padding:7px 10px;background:rgba(64,192,128,.08);border:1px solid rgba(64,192,128,.25);border-radius:4px;font-size:.75rem;color:var(--success);font-family:monospace;word-break:break-all;}
 .link-preview.visible{display:block;}
-.link-error{display:none;margin-top:4px;padding:8px 10px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:4px;font-size:.78rem;color:var(--danger);}
+.link-error{display:none;margin-top:3px;padding:7px 10px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:4px;font-size:.75rem;color:var(--danger);}
 .link-error.visible{display:block;}
-
-.btn-primary{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px;border-radius:4px;cursor:pointer;border:none;background:var(--accent);color:#0f1117;width:100%;transition:all .2s;}
+.link-helper{background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:.85rem;display:flex;flex-direction:column;gap:7px;}
+.link-helper-title{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.link-step{display:flex;align-items:flex-start;gap:9px;font-size:.8rem;color:var(--muted2);}
+.link-step-num{width:18px;height:18px;border-radius:50%;background:rgba(232,160,32,.15);color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.btn-primary{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px;border-radius:4px;cursor:pointer;border:none;background:var(--accent);color:#0f1117;width:100%;transition:all .2s;}
 .btn-primary:hover{background:var(--accent2);}
-.btn-danger-full{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px;border-radius:4px;cursor:pointer;background:rgba(224,80,80,.15);color:var(--danger);border:1px solid rgba(224,80,80,.4);width:100%;transition:all .2s;}
+.btn-danger-full{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px;border-radius:4px;cursor:pointer;background:rgba(224,80,80,.15);color:var(--danger);border:1px solid rgba(224,80,80,.4);width:100%;transition:all .2s;}
 .btn-danger-full:hover{background:rgba(224,80,80,.25);}
-.btn-secondary{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px;border-radius:4px;cursor:pointer;background:transparent;color:var(--muted);border:1px solid var(--border);width:100%;transition:all .2s;}
+.btn-secondary{font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px;border-radius:4px;cursor:pointer;background:transparent;color:var(--muted);border:1px solid var(--border);width:100%;transition:all .2s;}
 .btn-secondary:hover{color:var(--text);border-color:var(--muted2);}
-
+ 
 /* Login */
-.login-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.97);z-index:400;align-items:center;justify-content:center;}
+.login-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.97);z-index:600;align-items:center;justify-content:center;}
 .login-overlay.open{display:flex;}
-.login-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:2rem;width:100%;max-width:340px;text-align:center;}
-.login-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);margin-bottom:1.5rem;}
-.login-hint{font-size:.78rem;color:var(--muted);margin-top:.75rem;}
-
+.login-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:2rem;width:100%;max-width:320px;text-align:center;}
+.login-title{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);margin-bottom:1.25rem;}
+ 
 /* Admin panel */
-.admin-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.95);z-index:300;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;}
+.admin-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.95);z-index:400;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto;}
 .admin-overlay.open{display:flex;}
-.admin-panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:660px;}
-.admin-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.admin-header-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);}
+.admin-panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:640px;margin:auto 0;}
+.admin-header{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.admin-header-title{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);}
 .admin-tabs{display:flex;border-bottom:1px solid var(--border);}
-.admin-tab{flex:1;padding:10px 8px;text-align:center;cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;}
+.admin-tab{flex:1;padding:9px 8px;text-align:center;cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;}
 .admin-tab:hover{color:var(--text);}
 .admin-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.admin-tab-panel{display:none;padding:1.5rem;flex-direction:column;gap:1rem;}
+.admin-tab-panel{display:none;padding:1.25rem;flex-direction:column;gap:.9rem;}
 .admin-tab-panel.active{display:flex;}
-.admin-section-title{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-bottom:.5rem;border-bottom:1px solid var(--border);}
-
-/* Manage lists */
-.manage-list{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto;}
-.manage-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:8px 10px;}
-.manage-item-name{flex:1;font-size:.88rem;color:var(--text);}
-.manage-item-sub{font-size:.75rem;color:var(--muted);}
-.manage-item-link{font-size:.72rem;color:var(--success);font-family:monospace;}
-.manage-item-nolink{font-size:.72rem;color:var(--muted);}
-.btn-sm{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;transition:all .15s;}
+.admin-section-title{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-bottom:.4rem;border-bottom:1px solid var(--border);}
+.manage-list{display:flex;flex-direction:column;gap:4px;max-height:240px;overflow-y:auto;}
+.manage-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:7px 10px;}
+.manage-item-name{flex:1;font-size:.85rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.manage-item-sub{font-size:.72rem;color:var(--muted);}
+.manage-item-link{font-size:.7rem;color:var(--success);}
+.manage-item-nolink{font-size:.7rem;color:var(--muted);}
+.btn-sm{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;transition:all .15s;flex-shrink:0;}
 .btn-sm.edit{color:var(--teal);}
 .btn-sm.edit:hover{border-color:var(--teal);}
 .btn-sm.del{color:var(--danger);}
 .btn-sm.del:hover{border-color:var(--danger);background:rgba(224,80,80,.1);}
-
-/* Log */
-.log-list{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;}
-.log-item{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:8px 12px;display:flex;align-items:flex-start;gap:10px;}
-.log-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
-.log-text{font-size:.82rem;color:var(--muted2);flex:1;}
+.log-list{display:flex;flex-direction:column;gap:5px;max-height:320px;overflow-y:auto;}
+.log-item{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:7px 10px;display:flex;align-items:flex-start;gap:8px;}
+.log-icon{font-size:.95rem;flex-shrink:0;margin-top:1px;}
+.log-text{font-size:.8rem;color:var(--muted2);flex:1;}
 .log-text strong{color:var(--text);font-weight:500;}
-.log-time{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;color:var(--muted);flex-shrink:0;margin-top:2px;}
-.log-empty{text-align:center;color:var(--muted);font-size:.85rem;padding:2rem;}
-
+.log-time{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;color:var(--muted);flex-shrink:0;}
+.log-empty{text-align:center;color:var(--muted);font-size:.82rem;padding:1.5rem;}
+ 
 /* Confirm */
-.confirm-box{background:var(--bg2);border:1px solid rgba(224,80,80,.4);border-radius:8px;width:100%;max-width:400px;padding:2rem;text-align:center;}
-.confirm-icon{font-size:2.5rem;margin-bottom:1rem;}
-.confirm-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--danger);margin-bottom:.5rem;}
-.confirm-text{font-size:.88rem;color:var(--muted2);margin-bottom:1.5rem;line-height:1.5;}
+.confirm-box{background:var(--bg2);border:1px solid rgba(224,80,80,.4);border-radius:8px;width:100%;max-width:380px;padding:1.75rem;text-align:center;}
+.confirm-icon{font-size:2.2rem;margin-bottom:.75rem;}
+.confirm-title{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:700;color:var(--danger);margin-bottom:.4rem;}
+.confirm-text{font-size:.85rem;color:var(--muted2);margin-bottom:1.25rem;line-height:1.5;}
 .confirm-actions{display:flex;gap:8px;}
-
+ 
 /* Toast */
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.04em;padding:10px 18px;border-radius:4px;z-index:600;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;}
+.toast{position:fixed;bottom:1.25rem;right:1.25rem;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.04em;padding:9px 16px;border-radius:4px;z-index:700;transform:translateY(16px);opacity:0;transition:all .3s;pointer-events:none;}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.ok{background:var(--bg3);border:1px solid var(--success);color:var(--success);}
 .toast.err{background:var(--bg3);border:1px solid var(--danger);color:var(--danger);}
 .toast.info{background:var(--bg3);border:1px solid var(--teal);color:var(--teal);}
-
-@media(max-width:680px){aside{width:220px;}.manuals-grid{grid-template-columns:1fr;}.form-row-2{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-
+ 
 <header>
-  <div class="logo">Taller <span>///</span> Manuales</div>
+  <div class="header-left">
+    <button class="btn-sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Mostrar/ocultar menú">☰</button>
+    <div class="logo">Taller <span>///</span> Manuales</div>
+  </div>
   <div class="header-right">
-    <div class="admin-indicator" id="adminIndicator"><div class="admin-dot"></div>Admin activo</div>
-    <button class="btn-header danger" id="btnLogout" style="display:none" onclick="logout()">Cerrar sesión</button>
-    <button class="btn-header" id="btnLogin" onclick="openLogin()">⚙ Panel Admin</button>
+    <div class="admin-indicator" id="adminIndicator"><div class="admin-dot"></div>Admin</div>
+    <button class="btn-header" id="btnAdminPanel" onclick="openAdminPanel()" style="display:none">⚙ Administración</button>
+    <button class="btn-header danger" id="btnLogout" style="display:none" onclick="logout()">Salir</button>
+    <button class="btn-header" id="btnLogin" onclick="openLogin()">⚙ Admin</button>
   </div>
 </header>
-
+ 
+<!-- Backdrop sidebar mobile -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebarMobile()"></div>
+ 
 <div class="app">
   <aside id="sidebarRoot">
     <div class="module-tabs">
       <button class="module-tab active-mec" id="tab-mec" onclick="switchModule('mec')">
-        <span class="tab-icon">🔧</span>Módulo<br>Mecánico
+        <span class="tab-icon">🔧</span>Mecánico
       </button>
       <button class="module-tab" id="tab-tec" onclick="switchModule('tec')">
-        <span class="tab-icon">⚙️</span>Módulo<br>Técnico
+        <span class="tab-icon">⚙️</span>Técnico
       </button>
     </div>
     <div class="sidebar-panel active" id="panel-mec">
@@ -282,11 +308,11 @@ main{flex:1;overflow-y:auto;}
       <button class="btn-add-new" onclick="openAddBrand('tec')"><div class="add-icon">+</div>Nueva marca</button>
     </div>
   </aside>
-
+ 
   <main>
     <div class="module-bar" id="moduleBar"></div>
     <div class="search-bar">
-      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 16 16" fill="none">
         <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
         <line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
@@ -301,33 +327,29 @@ main{flex:1;overflow-y:auto;}
     <div class="manuals-grid" id="manualsGrid"></div>
   </main>
 </div>
-
-<!-- ══ VISOR MODAL ══ -->
+ 
+<!-- ══ VISOR — pantalla completa ══ -->
 <div class="modal-overlay" id="viewerModal">
-  <div class="modal">
+  <div class="modal-full">
     <div class="modal-header">
       <div class="modal-title" id="modalTitle"></div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn-toolbar primary" id="btnOpenTab" onclick="openInNewTab()" style="display:none">↗ Abrir en nueva pestaña</button>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+        <button class="btn-toolbar primary" id="btnOpenTab" onclick="openInNewTab()" style="display:none">↗ Nueva pestaña</button>
+        <button class="btn-toolbar" id="btnDownload" onclick="downloadFile()" style="display:none">⬇ Descargar</button>
         <button class="modal-close" onclick="closeModal('viewerModal')">✕</button>
       </div>
     </div>
-    <div class="viewer-body">
-      <div class="viewer-toolbar">
-        <span class="viewer-badge" id="viewerBadge">Con archivo</span>
-        <span class="viewer-filename" id="viewerFilename"></span>
-        <button class="btn-toolbar" id="btnDownload" onclick="downloadFile()">⬇ Descargar</button>
-      </div>
-      <div class="viewer-frame-wrap" id="viewerFrameWrap">
-        <!-- contenido dinámico -->
-      </div>
+    <div class="viewer-toolbar">
+      <span class="viewer-badge" id="viewerBadge">ok</span>
+      <span class="viewer-filename" id="viewerFilename"></span>
     </div>
+    <div class="viewer-frame-wrap" id="viewerFrameWrap"></div>
   </div>
 </div>
-
+ 
 <!-- ══ EDIT MANUAL ══ -->
-<div class="modal-overlay" id="editManualModal">
-  <div class="modal modal-sm">
+<div class="modal-overlay centered" id="editManualModal">
+  <div class="modal modal-lg">
     <div class="modal-header">
       <div class="modal-title">Editar manual</div>
       <button class="modal-close" onclick="closeModal('editManualModal')">✕</button>
@@ -346,7 +368,7 @@ main{flex:1;overflow-y:auto;}
         </select>
       </div>
       <div class="form-row">
-        <label class="form-label">Link de Google Drive <span>(opcional — podés actualizar el archivo)</span></label>
+        <label class="form-label">Link Google Drive <small>(pegá el nuevo link para actualizar el archivo)</small></label>
         <input class="form-input" id="editManualLink" placeholder="https://drive.google.com/file/d/...">
         <div class="link-preview" id="editLinkPreview"></div>
         <div class="link-error" id="editLinkError"></div>
@@ -356,9 +378,9 @@ main{flex:1;overflow-y:auto;}
     </div>
   </div>
 </div>
-
-<!-- ══ CONFIRM DELETE ══ -->
-<div class="modal-overlay" id="confirmModal">
+ 
+<!-- ══ CONFIRM ══ -->
+<div class="modal-overlay centered" id="confirmModal">
   <div class="confirm-box">
     <div class="confirm-icon">🗑</div>
     <div class="confirm-title" id="confirmTitle">¿Eliminar?</div>
@@ -369,10 +391,10 @@ main{flex:1;overflow-y:auto;}
     </div>
   </div>
 </div>
-
+ 
 <!-- ══ ADD BRAND ══ -->
-<div class="modal-overlay" id="addBrandModal">
-  <div class="modal modal-sm">
+<div class="modal-overlay centered" id="addBrandModal">
+  <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="addBrandTitle">Nueva marca</div>
       <button class="modal-close" onclick="closeModal('addBrandModal')">✕</button>
@@ -391,10 +413,10 @@ main{flex:1;overflow-y:auto;}
     </div>
   </div>
 </div>
-
+ 
 <!-- ══ ADD MODEL ══ -->
-<div class="modal-overlay" id="addModelModal">
-  <div class="modal modal-sm">
+<div class="modal-overlay centered" id="addModelModal">
+  <div class="modal">
     <div class="modal-header">
       <div class="modal-title mec">Nuevo modelo</div>
       <button class="modal-close" onclick="closeModal('addModelModal')">✕</button>
@@ -413,26 +435,25 @@ main{flex:1;overflow-y:auto;}
     </div>
   </div>
 </div>
-
+ 
 <!-- ══ LOGIN ══ -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
     <div class="login-title">🔒 Acceso Admin</div>
     <div class="form-row" style="text-align:left;margin-bottom:1rem">
       <label class="form-label">Contraseña</label>
-      <input class="form-input" type="password" id="loginPass" placeholder="Ingresá la contraseña" onkeydown="if(event.key==='Enter')checkLogin()">
+      <input class="form-input" type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')checkLogin()">
     </div>
     <button class="btn-primary" onclick="checkLogin()">Ingresar</button>
     <button class="btn-secondary" style="margin-top:.5rem" onclick="closeModal('loginOverlay')">Cancelar</button>
-    <div class="login-hint">Contraseña demo: <strong>admin123</strong></div>
   </div>
 </div>
-
+ 
 <!-- ══ ADMIN PANEL ══ -->
 <div class="admin-overlay" id="adminOverlay">
   <div class="admin-panel">
     <div class="admin-header">
-      <div class="admin-header-title">⚙ Panel de administración</div>
+      <div class="admin-header-title">⚙ Administración</div>
       <button class="modal-close" onclick="closeModal('adminOverlay')">✕</button>
     </div>
     <div class="admin-tabs">
@@ -440,15 +461,14 @@ main{flex:1;overflow-y:auto;}
       <button class="admin-tab" onclick="switchAdminTab('flota',this)">Flota</button>
       <button class="admin-tab" onclick="switchAdminTab('log',this)">Historial</button>
     </div>
-
-    <!-- TAB MANUALES -->
+ 
     <div class="admin-tab-panel active" id="atab-manuales">
       <div class="admin-section-title">Agregar nuevo manual</div>
       <div class="form-row">
         <label class="form-label">Módulo</label>
         <select class="form-select" id="f-module" onchange="updateAdminForm()">
-          <option value="mec">🔧 Módulo Mecánico</option>
-          <option value="tec">⚙️ Módulo Técnico</option>
+          <option value="mec">🔧 Mecánico</option>
+          <option value="tec">⚙️ Técnico</option>
         </select>
       </div>
       <div class="form-row">
@@ -466,66 +486,61 @@ main{flex:1;overflow-y:auto;}
         </div>
       </div>
       <div class="form-row">
-        <label class="form-label">Tipo de manual</label>
+        <label class="form-label">Tipo</label>
         <select class="form-select" id="f-type">
           <option value="Despiece">Despiece</option>
           <option value="Técnico">Técnico</option>
           <option value="Mecánico">Mecánico</option>
         </select>
       </div>
-
-      <!-- LINK GOOGLE DRIVE -->
       <div class="form-row">
-        <label class="form-label">Link de Google Drive <span>(pegá el link para compartir del archivo)</span></label>
+        <label class="form-label">Link Google Drive <small>(compartir → cualquier persona con el enlace)</small></label>
         <input class="form-input" id="f-link" placeholder="https://drive.google.com/file/d/XXXX/view?usp=sharing" oninput="validateDriveLink(this.value,'f-link-preview','f-link-error')">
         <div class="link-preview" id="f-link-preview"></div>
         <div class="link-error" id="f-link-error"></div>
       </div>
-
       <div class="link-helper">
-        <div class="link-helper-title">¿Cómo obtener el link de Google Drive?</div>
-        <div class="link-step"><div class="link-step-num">1</div><span>Subí el PDF a tu Google Drive</span></div>
-        <div class="link-step"><div class="link-step-num">2</div><span>Clic derecho sobre el archivo → <strong>Compartir</strong></span></div>
-        <div class="link-step"><div class="link-step-num">3</div><span>Cambiá el acceso a <strong>"Cualquier persona con el enlace"</strong></span></div>
+        <div class="link-helper-title">¿Cómo obtener el link?</div>
+        <div class="link-step"><div class="link-step-num">1</div><span>Subí el archivo a Google Drive</span></div>
+        <div class="link-step"><div class="link-step-num">2</div><span>Clic derecho → <strong>Compartir</strong></span></div>
+        <div class="link-step"><div class="link-step-num">3</div><span>Acceso: <strong>"Cualquier persona con el enlace"</strong></span></div>
         <div class="link-step"><div class="link-step-num">4</div><span>Copiá el link y pegalo arriba</span></div>
       </div>
-
       <button class="btn-primary" onclick="addManual()">+ Agregar manual</button>
       <div class="admin-section-title" style="margin-top:.25rem">Manuales cargados</div>
       <div class="manage-list" id="adminManualList"></div>
     </div>
-
-    <!-- TAB FLOTA -->
+ 
     <div class="admin-tab-panel" id="atab-flota">
-      <div class="admin-section-title">Marcas — Módulo Mecánico</div>
+      <div class="admin-section-title">Marcas — Mecánico</div>
       <div class="manage-list" id="flota-mec-brands"></div>
-      <div class="admin-section-title" style="margin-top:.5rem">Modelos — Módulo Mecánico</div>
+      <div class="admin-section-title" style="margin-top:.5rem">Modelos — Mecánico</div>
       <div class="manage-list" id="flota-mec-models"></div>
-      <div class="admin-section-title" style="margin-top:.5rem">Marcas — Módulo Técnico</div>
+      <div class="admin-section-title" style="margin-top:.5rem">Marcas — Técnico</div>
       <div class="manage-list" id="flota-tec-brands"></div>
     </div>
-
-    <!-- TAB LOG -->
+ 
     <div class="admin-tab-panel" id="atab-log">
       <div class="admin-section-title">Historial de cambios</div>
       <div class="log-list" id="logList"></div>
       <button class="btn-secondary" onclick="clearLog()" style="margin-top:.5rem">Limpiar historial</button>
     </div>
-
-    <div style="padding:1rem 1.5rem;border-top:1px solid var(--border);">
+ 
+    <div style="padding:.9rem 1.25rem;border-top:1px solid var(--border);">
       <button class="btn-secondary" onclick="closeModal('adminOverlay')">Cerrar panel</button>
     </div>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script>
 // ══ STATE ══
 const S={module:'mec',brand:'Iveco',model:'todos',filter:'todos'};
-let isAdmin=false, addingFor='mec', editingId=null, viewingId=null, nextId=24;
+let isAdmin=false,addingFor='mec',editingId=null,viewingId=null,nextId=24;
 let activityLog=[];
-
+let sidebarOpen=true;
+ 
 // ══ DATA ══
 const mecBrands=[{name:'Iveco',sigla:'IVE',models:['Daily','Tector','Stralis','Eurocargo']}];
 const tecBrands=[
@@ -557,48 +572,50 @@ let manuals=[
   {id:22,mod:'tec',brand:'OMB',  model:'-',type:'Técnico', name:'Manual OMB sistema GNC',                  size:'22.5 MB',ext:'pdf',date:'Ago 2024',link:''},
   {id:23,mod:'tec',brand:'OMB',  model:'-',type:'Despiece',name:'Catálogo válvulas y accesorios OMB',      size:'9.0 MB', ext:'pdf',date:'Sep 2024',link:''},
 ];
-
-// ══ GOOGLE DRIVE UTILS ══
-// Convierte cualquier formato de link de Drive a embed URL para iframe
-// y a download URL para descargar
+ 
+// ══ SIDEBAR TOGGLE ══
+function toggleSidebar(){
+  const isMobile=window.innerWidth<=768;
+  if(isMobile){
+    const collapsed=document.getElementById('sidebarRoot').classList.contains('collapsed');
+    document.getElementById('sidebarRoot').classList.toggle('collapsed',!collapsed);
+    document.getElementById('sidebarBackdrop').classList.toggle('visible',collapsed);
+  } else {
+    sidebarOpen=!sidebarOpen;
+    document.getElementById('sidebarRoot').classList.toggle('collapsed',!sidebarOpen);
+  }
+}
+function closeSidebarMobile(){
+  document.getElementById('sidebarRoot').classList.add('collapsed');
+  document.getElementById('sidebarBackdrop').classList.remove('visible');
+}
+// En mobile, sidebar empieza cerrado
+window.addEventListener('DOMContentLoaded',()=>{
+  if(window.innerWidth<=768){
+    document.getElementById('sidebarRoot').classList.add('collapsed');
+  }
+});
+ 
+// ══ DRIVE UTILS ══
 function parseDriveLink(url){
   if(!url||!url.trim())return null;
-  // Formato: https://drive.google.com/file/d/FILE_ID/view...
   let m=url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if(m)return m[1];
-  // Formato: https://drive.google.com/open?id=FILE_ID
   m=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if(m)return m[1];
   return null;
 }
-function driveEmbedUrl(fileId){
-  return `https://drive.google.com/file/d/${fileId}/preview`;
-}
-function driveDownloadUrl(fileId){
-  return `https://drive.google.com/uc?export=download&id=${fileId}`;
-}
-function driveViewUrl(fileId){
-  return `https://drive.google.com/file/d/${fileId}/view`;
-}
-
-function validateDriveLink(val,previewId,errorId){
-  const prev=document.getElementById(previewId);
-  const err=document.getElementById(errorId);
+function driveEmbedUrl(id){return`https://drive.google.com/file/d/${id}/preview`;}
+function driveDownloadUrl(id){return`https://drive.google.com/uc?export=download&id=${id}`;}
+function driveViewUrl(id){return`https://drive.google.com/file/d/${id}/view`;}
+function validateDriveLink(val,prevId,errId){
+  const prev=document.getElementById(prevId),err=document.getElementById(errId);
   if(!val.trim()){prev.className='link-preview';err.className='link-error';return null;}
   const id=parseDriveLink(val);
-  if(id){
-    prev.className='link-preview visible';
-    prev.textContent='✓ Link válido — ID: '+id;
-    err.className='link-error';
-    return id;
-  } else {
-    err.className='link-error visible';
-    err.textContent='Link no reconocido. Usá el link "Compartir" de Google Drive.';
-    prev.className='link-preview';
-    return null;
-  }
+  if(id){prev.className='link-preview visible';prev.textContent='✓ Link válido — ID: '+id;err.className='link-error';return id;}
+  else{err.className='link-error visible';err.textContent='Link no reconocido. Usá el link "Compartir" de Google Drive.';prev.className='link-preview';return null;}
 }
-
+ 
 // ══ UTILS ══
 function getIcon(ext){return{pdf:'📄',jpg:'🖼',png:'🖼',jpeg:'🖼',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊'}[ext]||'📁';}
 function getBadge(t){return{Despiece:'badge-despiece',Técnico:'badge-tecnico',Mecánico:'badge-mecanico'}[t]||'';}
@@ -606,7 +623,7 @@ function nowStr(){const n=new Date();return n.toLocaleDateString('es-AR')+' '+n.
 function logAction(icon,text){activityLog.unshift({icon,text,time:nowStr()});renderLog();}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function showToast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',2800);}
-
+ 
 // ══ ADMIN SESSION ══
 function openLogin(){document.getElementById('loginOverlay').classList.add('open');}
 function checkLogin(){
@@ -615,9 +632,8 @@ function checkLogin(){
     closeModal('loginOverlay');
     document.getElementById('loginPass').value='';
     applyAdminMode();
-    document.getElementById('adminOverlay').classList.add('open');
-    updateAdminForm();renderAdminManualList();renderFlotaTab();renderLog();
-    showToast('Sesión admin iniciada','ok');
+    openAdminPanel();
+    showToast('Sesión iniciada','ok');
   } else {
     const i=document.getElementById('loginPass');
     i.style.borderColor='var(--danger)';
@@ -626,11 +642,13 @@ function checkLogin(){
   }
 }
 function logout(){
-  isAdmin=false; applyAdminMode();
-  document.getElementById('btnLogin').style.display='';
-  document.getElementById('btnLogout').style.display='none';
-  document.getElementById('adminIndicator').classList.remove('visible');
+  isAdmin=false;applyAdminMode();
   showToast('Sesión cerrada','info');
+}
+function openAdminPanel(){
+  if(!isAdmin){openLogin();return;}
+  document.getElementById('adminOverlay').classList.add('open');
+  updateAdminForm();renderAdminManualList();renderFlotaTab();renderLog();
 }
 function applyAdminMode(){
   document.getElementById('sidebarRoot').classList.toggle('admin-active',isAdmin);
@@ -638,11 +656,12 @@ function applyAdminMode(){
   document.getElementById('lbl-add-mec').style.display=isAdmin?'':'none';
   document.getElementById('lbl-add-tec').style.display=isAdmin?'':'none';
   document.getElementById('adminIndicator').classList.toggle('visible',isAdmin);
+  document.getElementById('btnAdminPanel').style.display=isAdmin?'':'none';
   document.getElementById('btnLogout').style.display=isAdmin?'':'none';
   document.getElementById('btnLogin').style.display=isAdmin?'none':'';
   renderCards();
 }
-
+ 
 // ══ MODULE ══
 function switchModule(mod){
   S.module=mod;S.filter='todos';
@@ -654,8 +673,9 @@ function switchModule(mod){
   if(mod==='mec'){S.brand=mecBrands[0].name;S.model='todos';}
   else{S.brand=tecBrands[0].name;S.model='-';renderTecBrands();}
   renderFilters();updateBreadcrumb();renderCards();
+  if(window.innerWidth<=768)closeSidebarMobile();
 }
-
+ 
 // ══ SIDEBAR ══
 function renderMecBrands(){
   document.getElementById('mec-brands-list').innerHTML=mecBrands.map(b=>`
@@ -681,10 +701,10 @@ function renderTecBrands(){
       <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('tec','${b.name}')">✕</span>
     </button>`).join('');
 }
-function selectBrand(brand,el){S.brand=brand;S.model='todos';S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();}
-function selectTecBrand(name,el){S.brand=name;S.model='-';S.filter='todos';renderTecBrands();renderFilters();updateBreadcrumb();renderCards();}
-function selectModel(model,brand,el){S.model=model;S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();}
-
+function selectBrand(brand){S.brand=brand;S.model='todos';S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
+function selectTecBrand(name){S.brand=name;S.model='-';S.filter='todos';renderTecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
+function selectModel(model,brand){S.model=model;S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
+ 
 // ══ FILTERS ══
 function renderFilters(){
   const ac=S.module==='mec'?'active-all-mec':'active-all-tec';
@@ -695,7 +715,7 @@ function renderFilters(){
     <button class="pill ${S.filter==='Mecánico'?'active-mecanico':''}" onclick="setFilter('Mecánico')">Mecánico</button>`;
 }
 function setFilter(f){S.filter=f;renderFilters();renderCards();}
-
+ 
 // ══ BREADCRUMB ══
 function updateBreadcrumb(){
   const badge=`<span class="mod-badge ${S.module}">${S.module==='mec'?'🔧 Mecánico':'⚙️ Técnico'}</span>`;
@@ -708,7 +728,7 @@ function updateBreadcrumb(){
     document.getElementById('gridTitle').textContent=S.brand;
   }
 }
-
+ 
 // ══ CARDS ══
 function renderCards(){
   const q=document.getElementById('searchInput').value.toLowerCase();
@@ -720,14 +740,11 @@ function renderCards(){
   );
   document.getElementById('gridCount').textContent=data.length+' manual'+(data.length!==1?'es':'');
   const grid=document.getElementById('manualsGrid');
-  if(!data.length){grid.innerHTML='<div class="empty-state">No se encontraron manuales para la selección actual.</div>';return;}
-
+  if(!data.length){grid.innerHTML='<div class="empty-state">No se encontraron manuales para esta selección.</div>';return;}
   grid.innerHTML=data.map(m=>{
     const hasLink=!!m.link;
-    const viewDisabled=!hasLink?' disabled title="Sin archivo cargado aún"':'';
-    const dlDisabled=!hasLink?' disabled title="Sin archivo cargado aún"':'';
-    return `
-    <div class="manual-card ${hasLink?'card-has-link':''}">
+    const dis=!hasLink?' disabled':'';
+    return`<div class="manual-card">
       <div class="card-top">
         <div class="card-type-badge ${getBadge(m.type)}">${m.type}</div>
         <div class="card-file-icon">${getIcon(m.ext)}</div>
@@ -736,56 +753,46 @@ function renderCards(){
       <div class="card-meta">
         <span class="meta-item">🏷 ${m.brand}${m.model!=='-'?' · '+m.model:''}</span>
         <span class="meta-item"> · ${m.size} · ${m.date}</span>
-        ${hasLink?'<span class="meta-item" style="color:var(--success)">● Archivo cargado</span>':'<span class="meta-item" style="color:var(--muted)">○ Sin archivo</span>'}
+        ${hasLink?'<span class="meta-item" style="color:var(--success)">● Cargado</span>':'<span class="meta-item" style="color:var(--muted)">○ Sin archivo</span>'}
       </div>
       <div class="card-actions">
-        <button class="btn-view"${viewDisabled} onclick="openViewer(${m.id})">Ver manual</button>
-        <button class="btn-dl"${dlDisabled} onclick="downloadManual(${m.id})">⬇ Descargar</button>
+        <button class="btn-view"${dis} onclick="openViewer(${m.id})">Ver manual</button>
+        <button class="btn-dl"${dis} onclick="downloadManual(${m.id})">⬇ Descargar</button>
       </div>
       <div class="card-admin-actions">
         <button class="btn-card-edit" onclick="openEditManual(${m.id})">✏ Editar</button>
         <button class="btn-card-del" onclick="confirmDeleteManual(${m.id})">🗑 Eliminar</button>
       </div>
-    </div>`}).join('');
-
+    </div>`;
+  }).join('');
   if(isAdmin)document.getElementById('manualsGrid').classList.add('admin-active');
 }
-
+ 
 // ══ VISOR ══
 let currentViewUrl='';
 function openViewer(id){
   const m=manuals.find(x=>x.id===id);if(!m)return;
   viewingId=id;
   document.getElementById('modalTitle').textContent=m.name;
-  document.getElementById('viewerFilename').textContent=m.name+' · '+m.brand+(m.model!=='-'?' '+m.model:'')+' · '+m.type;
-
+  document.getElementById('viewerFilename').textContent=m.brand+(m.model!=='-'?' · '+m.model:'')+' · '+m.type;
   const wrap=document.getElementById('viewerFrameWrap');
   const badge=document.getElementById('viewerBadge');
   const btnTab=document.getElementById('btnOpenTab');
   const btnDl=document.getElementById('btnDownload');
-
   const fileId=m.link?parseDriveLink(m.link):null;
-
   if(fileId){
     currentViewUrl=driveViewUrl(fileId);
-    badge.textContent='Archivo cargado';
-    badge.className='viewer-badge';
-    btnTab.style.display='';
-    btnDl.style.display='';
+    badge.textContent='Archivo cargado';badge.className='viewer-badge ok';
+    btnTab.style.display='';btnDl.style.display='';
     wrap.innerHTML=`<iframe class="viewer-iframe" src="${driveEmbedUrl(fileId)}" allow="autoplay" allowfullscreen></iframe>`;
   } else {
-    currentViewUrl='';
-    badge.textContent='Sin archivo';
-    badge.className='viewer-badge no-link';
-    btnTab.style.display='none';
-    btnDl.style.display='none';
-    wrap.innerHTML=`
-      <div class="viewer-nolink">
-        <div class="viewer-nolink-icon">📂</div>
-        <div class="viewer-nolink-title">Archivo no cargado aún</div>
-        <div class="viewer-nolink-text">Este manual todavía no tiene un archivo de Google Drive asociado.${isAdmin?' Editá el manual desde el panel admin para agregar el link.':' Consultá al administrador del sistema.'}</div>
-        ${isAdmin?`<div class="viewer-nolink-hint">Panel Admin → buscar "${m.name.substring(0,30)}..." → ✏ Editar</div>`:''}
-      </div>`;
+    currentViewUrl='';badge.textContent='Sin archivo';badge.className='viewer-badge no';
+    btnTab.style.display='none';btnDl.style.display='none';
+    wrap.innerHTML=`<div class="viewer-nolink">
+      <div class="viewer-nolink-icon">📂</div>
+      <div class="viewer-nolink-title">Archivo no cargado aún</div>
+      <div class="viewer-nolink-text">Este manual todavía no tiene un archivo asociado.${isAdmin?' Editalo desde el panel de administración para agregar el link de Drive.':' Consultá al administrador.'}</div>
+    </div>`;
   }
   document.getElementById('viewerModal').classList.add('open');
 }
@@ -795,11 +802,8 @@ function downloadManual(id){
   const fileId=parseDriveLink(m.link);
   if(fileId){window.open(driveDownloadUrl(fileId),'_blank');showToast('Descarga iniciada','ok');}
 }
-function downloadFile(){
-  const m=manuals.find(x=>x.id===viewingId);
-  if(m)downloadManual(m.id);
-}
-
+function downloadFile(){const m=manuals.find(x=>x.id===viewingId);if(m)downloadManual(m.id);}
+ 
 // ══ EDIT MANUAL ══
 function openEditManual(id){
   if(!isAdmin)return;
@@ -816,41 +820,37 @@ function openEditManual(id){
 }
 function confirmEditManual(){
   const m=manuals.find(x=>x.id===editingId);if(!m)return;
-  const oldName=m.name;
-  const newLink=document.getElementById('editManualLink').value.trim();
-  const fileId=newLink?parseDriveLink(newLink):null;
-  if(newLink&&!fileId){showToast('El link de Drive no es válido','err');return;}
+  const rawLink=document.getElementById('editManualLink').value.trim();
+  const fileId=rawLink?parseDriveLink(rawLink):null;
+  if(rawLink&&!fileId){showToast('El link de Drive no es válido','err');return;}
   m.name=document.getElementById('editManualName').value.trim()||m.name;
   m.type=document.getElementById('editManualType').value;
-  m.link=newLink;
-  m.date='Hoy (editado)';
+  m.link=rawLink;m.date='Hoy (editado)';
   closeModal('editManualModal');
   renderCards();renderAdminManualList();
-  logAction('✏','Manual actualizado: <strong>'+m.name+'</strong>'+(newLink&&fileId?' — archivo Drive vinculado':''));
+  logAction('✏','Manual actualizado: <strong>'+m.name+'</strong>'+(fileId?' — Drive vinculado':''));
   showToast('Manual actualizado','ok');
 }
-
+ 
 // ══ DELETE MANUAL ══
 function confirmDeleteManual(id){
   if(!isAdmin)return;
   const m=manuals.find(x=>x.id===id);if(!m)return;
   document.getElementById('confirmTitle').textContent='¿Eliminar manual?';
-  document.getElementById('confirmText').innerHTML='Vas a eliminar permanentemente:<br><strong>"'+m.name+'"</strong><br>Esta acción no se puede deshacer.';
+  document.getElementById('confirmText').innerHTML='Vas a eliminar:<br><strong>"'+m.name+'"</strong><br>Esta acción no se puede deshacer.';
   document.getElementById('confirmBtn').onclick=()=>{
     manuals=manuals.filter(x=>x.id!==id);
-    closeModal('confirmModal');
-    renderCards();renderAdminManualList();
-    logAction('🗑','Manual eliminado: <strong>'+m.name+'</strong>');
-    showToast('Manual eliminado','err');
+    closeModal('confirmModal');renderCards();renderAdminManualList();
+    logAction('🗑','Eliminado: <strong>'+m.name+'</strong>');showToast('Manual eliminado','err');
   };
   document.getElementById('confirmModal').classList.add('open');
 }
-
-// ══ DELETE BRAND ══
+ 
+// ══ DELETE BRAND / MODEL ══
 function confirmDeleteBrand(mod,name){
   if(!isAdmin)return;
   document.getElementById('confirmTitle').textContent='¿Eliminar marca?';
-  document.getElementById('confirmText').innerHTML='Vas a eliminar <strong>"'+name+'"</strong> y todos sus manuales.<br>Esta acción no se puede deshacer.';
+  document.getElementById('confirmText').innerHTML='Vas a eliminar <strong>"'+name+'"</strong> y todos sus manuales.';
   document.getElementById('confirmBtn').onclick=()=>{
     if(mod==='mec'){const i=mecBrands.findIndex(x=>x.name===name);if(i>-1)mecBrands.splice(i,1);manuals=manuals.filter(m=>!(m.mod==='mec'&&m.brand===name));if(S.brand===name&&mecBrands.length){S.brand=mecBrands[0].name;S.model='todos';}renderMecBrands();}
     else{const i=tecBrands.findIndex(x=>x.name===name);if(i>-1)tecBrands.splice(i,1);manuals=manuals.filter(m=>!(m.mod==='tec'&&m.brand===name));if(S.brand===name&&tecBrands.length)S.brand=tecBrands[0].name;renderTecBrands();}
@@ -859,8 +859,6 @@ function confirmDeleteBrand(mod,name){
   };
   document.getElementById('confirmModal').classList.add('open');
 }
-
-// ══ DELETE MODEL ══
 function confirmDeleteModel(brand,model){
   if(!isAdmin)return;
   document.getElementById('confirmTitle').textContent='¿Eliminar modelo?';
@@ -874,7 +872,7 @@ function confirmDeleteModel(brand,model){
   };
   document.getElementById('confirmModal').classList.add('open');
 }
-
+ 
 // ══ ADD BRAND ══
 function openAddBrand(mod){
   if(!isAdmin)return;
@@ -893,9 +891,9 @@ function confirmAddBrand(){
   if(addingFor==='mec'){mecBrands.push({name,sigla,models:[]});renderMecBrands();}
   else{tecBrands.push({name,sigla});renderTecBrands();}
   closeModal('addBrandModal');renderFlotaTab();renderAdminManualList();
-  logAction('➕','Marca agregada: <strong>'+name+'</strong>');showToast('Marca "'+name+'" agregada','ok');
+  logAction('➕','Marca agregada: <strong>'+name+'</strong>');showToast('Marca agregada','ok');
 }
-
+ 
 // ══ ADD MODEL ══
 function openAddModel(){
   if(!isAdmin)return;
@@ -910,9 +908,9 @@ function confirmAddModel(){
   const b=mecBrands.find(x=>x.name===brand);
   if(b&&!b.models.includes(model))b.models.push(model);
   closeModal('addModelModal');renderMecBrands();renderFlotaTab();
-  logAction('➕','Modelo agregado: <strong>'+model+'</strong> a '+brand);showToast('Modelo "'+model+'" agregado','ok');
+  logAction('➕','Modelo agregado: <strong>'+model+'</strong> a '+brand);showToast('Modelo agregado','ok');
 }
-
+ 
 // ══ ADD MANUAL ══
 function updateAdminForm(){
   const mod=document.getElementById('f-module').value;
@@ -927,10 +925,10 @@ function updateAdminModels(){
 }
 function addManual(){
   const name=document.getElementById('f-name').value.trim();
-  if(!name){showToast('Ingresá el nombre del manual','err');return;}
+  if(!name){showToast('Ingresá el nombre','err');return;}
   const rawLink=document.getElementById('f-link').value.trim();
   const fileId=rawLink?parseDriveLink(rawLink):null;
-  if(rawLink&&!fileId){showToast('El link de Drive no es válido','err');return;}
+  if(rawLink&&!fileId){showToast('Link de Drive inválido','err');return;}
   const mod=document.getElementById('f-module').value;
   const brand=document.getElementById('f-brand').value;
   const model=mod==='tec'?'-':(document.getElementById('f-model').value||'-');
@@ -942,20 +940,20 @@ function addManual(){
   if(mod!==S.module)switchModule(mod);
   S.brand=brand;S.model='todos';S.filter='todos';
   renderFilters();updateBreadcrumb();renderCards();renderAdminManualList();
-  logAction('➕','Manual agregado: <strong>'+name+'</strong>'+(fileId?' — con archivo Drive':'— sin archivo'));
+  logAction('➕','Manual agregado: <strong>'+name+'</strong>'+(fileId?' — Drive vinculado':''));
   showToast('Manual agregado'+(fileId?' con archivo':' (sin archivo aún)'),'ok');
 }
-
+ 
 // ══ ADMIN PANELS ══
 function renderAdminManualList(){
   const el=document.getElementById('adminManualList');if(!el)return;
   el.innerHTML=manuals.length?manuals.map(m=>`
     <div class="manage-item">
-      <span style="font-size:1rem;flex-shrink:0">${getIcon(m.ext)}</span>
+      <span style="font-size:.95rem;flex-shrink:0">${getIcon(m.ext)}</span>
       <div style="flex:1;min-width:0">
-        <div class="manage-item-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.name}</div>
+        <div class="manage-item-name">${m.name}</div>
         <div class="manage-item-sub">${m.brand}${m.model!=='-'?' · '+m.model:''} · ${m.type}</div>
-        ${m.link?`<div class="manage-item-link">● Drive vinculado</div>`:`<div class="manage-item-nolink">○ Sin archivo</div>`}
+        ${m.link?'<div class="manage-item-link">● Drive vinculado</div>':'<div class="manage-item-nolink">○ Sin archivo</div>'}
       </div>
       <button class="btn-sm edit" onclick="closeModal('adminOverlay');openEditManual(${m.id})">✏</button>
       <button class="btn-sm del" onclick="confirmDeleteManual(${m.id})">🗑</button>
@@ -964,7 +962,7 @@ function renderAdminManualList(){
 function renderFlotaTab(){
   document.getElementById('flota-mec-brands').innerHTML=mecBrands.map(b=>`
     <div class="manage-item">
-      <div class="brand-icon" style="width:28px;height:28px;font-size:.6rem">${b.sigla}</div>
+      <div class="brand-icon" style="width:26px;height:26px;font-size:.58rem">${b.sigla}</div>
       <div style="flex:1"><div class="manage-item-name">${b.name}</div><div class="manage-item-sub">${b.models.length} modelo(s)</div></div>
       <button class="btn-sm del" onclick="confirmDeleteBrand('mec','${b.name}')">🗑</button>
     </div>`).join('')||'<div class="log-empty">Sin marcas.</div>';
@@ -976,7 +974,7 @@ function renderFlotaTab(){
     </div>`).join('')||'<div class="log-empty">Sin modelos.</div>';
   document.getElementById('flota-tec-brands').innerHTML=tecBrands.map(b=>`
     <div class="manage-item">
-      <div class="brand-icon" style="width:28px;height:28px;font-size:.6rem">${b.sigla}</div>
+      <div class="brand-icon" style="width:26px;height:26px;font-size:.58rem">${b.sigla}</div>
       <div style="flex:1"><div class="manage-item-name">${b.name}</div></div>
       <button class="btn-sm del" onclick="confirmDeleteBrand('tec','${b.name}')">🗑</button>
     </div>`).join('')||'<div class="log-empty">Sin marcas.</div>';
@@ -988,7 +986,7 @@ function renderLog(){
       <span class="log-icon">${l.icon}</span>
       <span class="log-text">${l.text}</span>
       <span class="log-time">${l.time}</span>
-    </div>`).join(''):'<div class="log-empty">Sin actividad registrada aún.</div>';
+    </div>`).join(''):'<div class="log-empty">Sin actividad registrada.</div>';
 }
 function clearLog(){activityLog=[];renderLog();showToast('Historial limpiado','info');}
 function switchAdminTab(name,el){
@@ -1000,13 +998,21 @@ function switchAdminTab(name,el){
   if(name==='log')renderLog();
   if(name==='manuales')renderAdminManualList();
 }
-
-['viewerModal','addBrandModal','addModelModal','editManualModal','confirmModal'].forEach(id=>{
+ 
+// Cerrar modales con backdrop
+['editManualModal','confirmModal','addBrandModal','addModelModal'].forEach(id=>{
   document.getElementById(id).addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal(id);});
 });
-
+// Cerrar visor con Escape
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    ['viewerModal','editManualModal','confirmModal','addBrandModal','addModelModal','adminOverlay'].forEach(closeModal);
+  }
+});
+ 
 // ══ INIT ══
 renderMecBrands();renderTecBrands();renderFilters();updateBreadcrumb();renderCards();
 </script>
 </body>
 </html>
+ 
