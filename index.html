@@ -16,13 +16,15 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.5;overflow-x:hidden;}
- 
+
 header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:200;}
 .header-left{display:flex;align-items:center;gap:10px;}
 .btn-sidebar-toggle{background:transparent;border:1px solid var(--border);color:var(--muted2);width:34px;height:34px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:1rem;}
 .btn-sidebar-toggle:hover{border-color:var(--accent);color:var(--accent);}
+.logo-wrap{display:flex;flex-direction:column;line-height:1;}
 .logo{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.25rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text);}
 .logo span{color:var(--accent);}
+.logo-sub{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);text-align:center;margin-top:1px;}
 .header-right{display:flex;align-items:center;gap:8px;}
 .admin-indicator{display:none;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(232,160,32,.12);border:1px solid rgba(232,160,32,.3);padding:4px 10px;border-radius:3px;}
 .admin-indicator.visible{display:flex;}
@@ -30,9 +32,9 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.2
 .btn-header{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--border);background:transparent;color:var(--muted2);border-radius:4px;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .btn-header:hover{border-color:var(--accent);color:var(--accent);}
 .btn-header.danger:hover{border-color:var(--danger);color:var(--danger);}
- 
+
 .app{display:flex;height:calc(100vh - 56px);overflow:hidden;}
- 
+
 aside{width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .25s ease,opacity .25s ease;}
 aside.collapsed{width:0;border-right:none;opacity:0;pointer-events:none;}
 @media(max-width:768px){
@@ -42,7 +44,7 @@ aside.collapsed{width:0;border-right:none;opacity:0;pointer-events:none;}
 }
 .sidebar-backdrop{display:none;position:fixed;inset:0;top:56px;background:rgba(0,0,0,.5);z-index:140;}
 .sidebar-backdrop.visible{display:block;}
- 
+
 .module-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);flex-shrink:0;}
 .module-tab{padding:12px 8px;text-align:center;cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:all .2s;border-bottom:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.2;}
 .module-tab .tab-icon{font-size:1rem;}
@@ -80,7 +82,7 @@ aside.collapsed{width:0;border-right:none;opacity:0;pointer-events:none;}
 .btn-add-new .add-icon{width:26px;height:26px;border-radius:4px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--muted);flex-shrink:0;}
 .btn-add-new:hover .add-icon{border-color:var(--muted2);color:var(--text);}
 .admin-active .btn-add-new{display:flex;}
- 
+
 main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .module-bar{height:3px;background:var(--mod-mec);transition:background .3s;flex-shrink:0;}
 .module-bar.tec{background:var(--mod-tec);}
@@ -132,7 +134,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .btn-card-del{background:transparent;border:1px solid var(--border);color:var(--muted);}
 .btn-card-del:hover{background:rgba(224,80,80,.1);border-color:var(--danger);color:var(--danger);}
 .empty-state{padding:4rem 2rem;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;grid-column:1/-1;}
- 
+
 /* Loading state */
 .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:999;}
 .loading-screen.hidden{display:none;}
@@ -142,7 +144,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .loading-bar-inner{height:100%;background:var(--accent);border-radius:2px;animation:loadbar 1.5s ease-in-out infinite;}
 @keyframes loadbar{0%{width:0%;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0%;margin-left:100%}}
 .loading-text{font-size:.82rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;}
- 
+
 /* Visor full */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(8,10,16,.96);z-index:500;align-items:stretch;justify-content:stretch;padding:0;}
 .modal-overlay.open{display:flex;}
@@ -170,7 +172,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .viewer-nolink-icon{font-size:3rem;}
 .viewer-nolink-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--muted2);}
 .viewer-nolink-text{font-size:.86rem;line-height:1.6;max-width:400px;}
- 
+
 .modal-body-pad{padding:1.25rem;display:flex;flex-direction:column;gap:.9rem;overflow-y:auto;}
 .form-row{display:flex;flex-direction:column;gap:5px;}
 .form-label{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
@@ -194,12 +196,12 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .btn-danger-full:hover{background:rgba(224,80,80,.25);}
 .btn-secondary{font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px;border-radius:4px;cursor:pointer;background:transparent;color:var(--muted);border:1px solid var(--border);width:100%;transition:all .2s;}
 .btn-secondary:hover{color:var(--text);border-color:var(--muted2);}
- 
+
 .login-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.97);z-index:600;align-items:center;justify-content:center;}
 .login-overlay.open{display:flex;}
 .login-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:2rem;width:100%;max-width:320px;text-align:center;}
 .login-title{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);margin-bottom:1.25rem;}
- 
+
 .admin-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.95);z-index:400;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto;}
 .admin-overlay.open{display:flex;}
 .admin-panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:640px;margin:auto 0;}
@@ -242,18 +244,21 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 </style>
 </head>
 <body>
- 
+
 <!-- LOADING -->
 <div class="loading-screen" id="loadingScreen">
   <div class="loading-logo">Taller <span>///</span> Manuales</div>
   <div class="loading-bar"><div class="loading-bar-inner"></div></div>
   <div class="loading-text">Cargando datos...</div>
 </div>
- 
+
 <header>
   <div class="header-left">
     <button class="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
-    <div class="logo">Taller <span>///</span> Manuales</div>
+    <div class="logo-wrap">
+      <div class="logo">Taller <span>///</span> Manuales</div>
+      <div class="logo-sub">Solbayres</div>
+    </div>
   </div>
   <div class="header-right">
     <div class="admin-indicator" id="adminIndicator"><div class="admin-dot"></div>Admin</div>
@@ -262,9 +267,9 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     <button class="btn-header" id="btnLogin" onclick="openLogin()">⚙ Admin</button>
   </div>
 </header>
- 
+
 <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebarMobile()"></div>
- 
+
 <div class="app">
   <aside id="sidebarRoot">
     <div class="module-tabs">
@@ -291,7 +296,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
       <button class="btn-add-new" onclick="openAddBrand('tec')"><div class="add-icon">+</div>Nueva marca</button>
     </div>
   </aside>
- 
+
   <main>
     <div class="module-bar" id="moduleBar"></div>
     <div class="search-bar">
@@ -310,7 +315,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     <div class="manuals-grid" id="manualsGrid"></div>
   </main>
 </div>
- 
+
 <!-- VISOR -->
 <div class="modal-overlay" id="viewerModal">
   <div class="modal-full">
@@ -329,7 +334,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     <div class="viewer-frame-wrap" id="viewerFrameWrap"></div>
   </div>
 </div>
- 
+
 <!-- EDIT MANUAL -->
 <div class="modal-overlay centered" id="editManualModal">
   <div class="modal modal-lg">
@@ -361,7 +366,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     </div>
   </div>
 </div>
- 
+
 <!-- CONFIRM -->
 <div class="modal-overlay centered" id="confirmModal">
   <div class="confirm-box">
@@ -374,7 +379,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     </div>
   </div>
 </div>
- 
+
 <!-- ADD BRAND -->
 <div class="modal-overlay centered" id="addBrandModal">
   <div class="modal">
@@ -396,7 +401,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     </div>
   </div>
 </div>
- 
+
 <!-- ADD MODEL -->
 <div class="modal-overlay centered" id="addModelModal">
   <div class="modal">
@@ -418,7 +423,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     </div>
   </div>
 </div>
- 
+
 <!-- LOGIN -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
@@ -431,7 +436,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     <button class="btn-secondary" style="margin-top:.5rem" onclick="closeModal('loginOverlay')">Cancelar</button>
   </div>
 </div>
- 
+
 <!-- ADMIN PANEL -->
 <div class="admin-overlay" id="adminOverlay">
   <div class="admin-panel">
@@ -444,7 +449,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
       <button class="admin-tab" onclick="switchAdminTab('flota',this)">Flota</button>
       <button class="admin-tab" onclick="switchAdminTab('log',this)">Historial</button>
     </div>
- 
+
     <div class="admin-tab-panel active" id="atab-manuales">
       <div class="admin-section-title">Agregar nuevo manual</div>
       <div class="form-row">
@@ -493,7 +498,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
       <div class="admin-section-title" style="margin-top:.25rem">Manuales cargados</div>
       <div class="manage-list" id="adminManualList"></div>
     </div>
- 
+
     <div class="admin-tab-panel" id="atab-flota">
       <div class="admin-section-title">Marcas — Mecánico</div>
       <div class="manage-list" id="flota-mec-brands"></div>
@@ -502,31 +507,31 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
       <div class="admin-section-title" style="margin-top:.5rem">Marcas — Técnico</div>
       <div class="manage-list" id="flota-tec-brands"></div>
     </div>
- 
+
     <div class="admin-tab-panel" id="atab-log">
       <div class="admin-section-title">Historial de cambios</div>
       <div class="log-list" id="logList"></div>
       <button class="btn-secondary" onclick="clearLog()" style="margin-top:.5rem">Limpiar historial</button>
     </div>
- 
+
     <div style="padding:.9rem 1.25rem;border-top:1px solid var(--border);">
       <button class="btn-secondary" onclick="closeModal('adminOverlay')">Cerrar panel</button>
     </div>
   </div>
 </div>
- 
+
 <div class="toast" id="toast"></div>
- 
+
 <script>
 // ══ CONFIG ══
 const API = 'https://script.google.com/macros/s/AKfycbwK4te1TSRYQa3gwom1W8NjgAwTRtJwfISeHTcz8GJXM4BWs3UROTGZdcIvIkBTvlNmOg/exec';
 const ADMIN_PASS = 'admin123'; // Cambiá esta contraseña
- 
+
 // ══ STATE ══
 const S={module:'mec',brand:'',model:'todos',filter:'todos'};
 let isAdmin=false, addingFor='mec', editingId=null, viewingId=null, nextId=1000;
 let mecBrands=[], tecBrands=[], manuals=[], activityLog=[];
- 
+
 // ══ DRIVE UTILS ══
 function parseDriveLink(url){
   if(!url||!url.trim())return null;
@@ -546,7 +551,7 @@ function validateDriveLink(val,prevId,errId){
   if(id){prev.className='link-preview visible';prev.textContent='✓ Link válido — ID: '+id;err.className='link-error';return id;}
   else{err.className='link-error visible';err.textContent='Link no reconocido. Usá el link "Compartir" de Google Drive.';prev.className='link-preview';return null;}
 }
- 
+
 // ══ API ══
 async function apiGet(){
   const res = await fetch(API+'?action=getData');
@@ -559,13 +564,13 @@ async function apiPost(action, data){
   });
   return res.json();
 }
- 
+
 // ══ LOAD DATA ══
 async function loadData(){
   try {
     const d = await apiGet();
     if(!d.ok) throw new Error(d.error);
- 
+
     // Reconstruir marcas mec
     const mecNames = [...new Set(d.marcas.filter(b=>b.mod==='mec').map(b=>b.name))];
     mecBrands = mecNames.map(name => {
@@ -577,7 +582,7 @@ async function loadData(){
     if(mecBrands.length===0){
       mecBrands=[{name:'Iveco',sigla:'IVE',models:['Daily','Tector','Stralis','Eurocargo']}];
     }
- 
+
     // Reconstruir marcas tec
     tecBrands = d.marcas.filter(b=>b.mod==='tec').map(b=>({name:b.name,sigla:b.sigla}));
     if(tecBrands.length===0){
@@ -586,26 +591,26 @@ async function loadData(){
         {name:'Palvi',sigla:'PAL'},{name:'Themac',sigla:'THE'},{name:'OMB',sigla:'OMB'}
       ];
     }
- 
+
     manuals = d.manuales.map(m=>({...m, id:Number(m.id)||nextId++}));
     activityLog = d.log || [];
- 
+
     // Set initial brand
     S.brand = mecBrands[0]?.name || '';
- 
+
     document.getElementById('loadingScreen').classList.add('hidden');
     renderMecBrands();
     renderTecBrands();
     renderFilters();
     updateBreadcrumb();
     renderCards();
- 
+
   } catch(e) {
     document.getElementById('loadingScreen').querySelector('.loading-text').textContent = 'Error al conectar. Recargá la página.';
     console.error(e);
   }
 }
- 
+
 // ══ UTILS ══
 function getIcon(ext){return{pdf:'📄',jpg:'🖼',png:'🖼',jpeg:'🖼',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊'}[ext]||'📁';}
 function getBadge(t){return{Despiece:'badge-despiece',Técnico:'badge-tecnico',Mecánico:'badge-mecanico'}[t]||'';}
@@ -613,7 +618,7 @@ function today(){return new Date().toLocaleDateString('es-AR');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function showToast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',2800);}
 function setBusy(btnId,busy,text){const b=document.getElementById(btnId);if(!b)return;b.disabled=busy;b.textContent=busy?'Guardando...':(text||b.textContent);}
- 
+
 // ══ SIDEBAR ══
 function toggleSidebar(){
   const isMobile=window.innerWidth<=768;
@@ -632,7 +637,7 @@ function closeSidebarMobile(){
 window.addEventListener('DOMContentLoaded',()=>{
   if(window.innerWidth<=768) document.getElementById('sidebarRoot').classList.add('collapsed');
 });
- 
+
 // ══ ADMIN ══
 function openLogin(){document.getElementById('loginOverlay').classList.add('open');}
 function checkLogin(){
@@ -667,7 +672,7 @@ function applyAdminMode(){
   document.getElementById('btnLogin').style.display=isAdmin?'none':'';
   renderCards();
 }
- 
+
 // ══ MODULE ══
 function switchModule(mod){
   S.module=mod;S.filter='todos';
@@ -681,7 +686,7 @@ function switchModule(mod){
   renderMecBrands();renderTecBrands();renderFilters();updateBreadcrumb();renderCards();
   if(window.innerWidth<=768)closeSidebarMobile();
 }
- 
+
 // ══ SIDEBAR RENDER ══
 function renderMecBrands(){
   document.getElementById('mec-brands-list').innerHTML=mecBrands.map(b=>`
@@ -710,7 +715,7 @@ function renderTecBrands(){
 function selectBrand(brand){S.brand=brand;S.model='todos';S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
 function selectTecBrand(name){S.brand=name;S.model='-';S.filter='todos';renderTecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
 function selectModel(model,brand){S.model=model;S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
- 
+
 // ══ FILTERS ══
 function renderFilters(){
   const ac=S.module==='mec'?'active-all-mec':'active-all-tec';
@@ -721,7 +726,7 @@ function renderFilters(){
     <button class="pill ${S.filter==='Mecánico'?'active-mecanico':''}" onclick="setFilter('Mecánico')">Mecánico</button>`;
 }
 function setFilter(f){S.filter=f;renderFilters();renderCards();}
- 
+
 // ══ BREADCRUMB ══
 function updateBreadcrumb(){
   const badge=`<span class="mod-badge ${S.module}">${S.module==='mec'?'🔧 Mecánico':'⚙️ Técnico'}</span>`;
@@ -734,7 +739,7 @@ function updateBreadcrumb(){
     document.getElementById('gridTitle').textContent=S.brand;
   }
 }
- 
+
 // ══ CARDS ══
 function renderCards(){
   const q=document.getElementById('searchInput').value.toLowerCase();
@@ -772,7 +777,7 @@ function renderCards(){
   }).join('');
   if(isAdmin)document.getElementById('manualsGrid').classList.add('admin-active');
 }
- 
+
 // ══ VISOR ══
 let currentViewUrl='';
 function openViewer(id){
@@ -808,7 +813,7 @@ function downloadManual(id){
   if(fid){window.open(driveDownloadUrl(fid),'_blank');showToast('Descarga iniciada','ok');}
 }
 function downloadFile(){const m=manuals.find(x=>x.id===viewingId);if(m)downloadManual(m.id);}
- 
+
 // ══ EDIT MANUAL ══
 function openEditManual(id){
   if(!isAdmin)return;
@@ -839,7 +844,7 @@ async function confirmEditManual(){
   renderCards();renderAdminManualList();
   showToast('Manual actualizado','ok');
 }
- 
+
 // ══ DELETE MANUAL ══
 function confirmDeleteManual(id){
   if(!isAdmin)return;
@@ -855,7 +860,7 @@ function confirmDeleteManual(id){
   };
   document.getElementById('confirmModal').classList.add('open');
 }
- 
+
 // ══ DELETE BRAND ══
 function confirmDeleteBrand(mod,name){
   if(!isAdmin)return;
@@ -880,7 +885,7 @@ function confirmDeleteBrand(mod,name){
   };
   document.getElementById('confirmModal').classList.add('open');
 }
- 
+
 // ══ DELETE MODEL ══
 function confirmDeleteModel(brand,model){
   if(!isAdmin)return;
@@ -898,7 +903,7 @@ function confirmDeleteModel(brand,model){
   };
   document.getElementById('confirmModal').classList.add('open');
 }
- 
+
 // ══ ADD BRAND ══
 function openAddBrand(mod){
   if(!isAdmin)return;
@@ -923,7 +928,7 @@ async function confirmAddBrand(){
   closeModal('addBrandModal');renderFlotaTab();renderAdminManualList();
   showToast('Marca "'+name+'" agregada','ok');
 }
- 
+
 // ══ ADD MODEL ══
 function openAddModel(){
   if(!isAdmin)return;
@@ -944,7 +949,7 @@ async function confirmAddModel(){
   closeModal('addModelModal');renderMecBrands();renderFlotaTab();
   showToast('Modelo "'+model+'" agregado','ok');
 }
- 
+
 // ══ ADD MANUAL ══
 function updateAdminForm(){
   const mod=document.getElementById('f-module').value;
@@ -981,7 +986,7 @@ async function addManual(){
   renderFilters();updateBreadcrumb();renderCards();renderAdminManualList();
   showToast('Manual agregado','ok');
 }
- 
+
 // ══ ADMIN PANELS ══
 function renderAdminManualList(){
   const el=document.getElementById('adminManualList');if(!el)return;
@@ -1039,7 +1044,7 @@ function switchAdminTab(name,el){
   if(name==='log')renderLog();
   if(name==='manuales')renderAdminManualList();
 }
- 
+
 ['editManualModal','confirmModal','addBrandModal','addModelModal'].forEach(id=>{
   document.getElementById(id).addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal(id);});
 });
@@ -1048,10 +1053,9 @@ document.addEventListener('keydown',e=>{
     ['viewerModal','editManualModal','confirmModal','addBrandModal','addModelModal','adminOverlay'].forEach(closeModal);
   }
 });
- 
+
 // ══ INIT ══
 loadData();
 </script>
 </body>
 </html>
- 
