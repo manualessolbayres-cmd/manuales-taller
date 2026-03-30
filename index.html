@@ -430,7 +430,10 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
     <div class="login-title">🔒 Acceso Admin</div>
     <div class="form-row" style="text-align:left;margin-bottom:1rem">
       <label class="form-label">Contraseña</label>
-      <input class="form-input" type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')checkLogin()">
+      <div style="position:relative;">
+        <input class="form-input" type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')checkLogin()" style="padding-right:40px;">
+        <button onclick="togglePassVisibility()" type="button" id="btnEye" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;color:var(--muted);font-size:1rem;padding:0;line-height:1;" title="Mostrar/ocultar contraseña">👁</button>
+      </div>
     </div>
     <button class="btn-primary" onclick="checkLogin()">Ingresar</button>
     <button class="btn-secondary" style="margin-top:.5rem" onclick="closeModal('loginOverlay')">Cancelar</button>
@@ -524,7 +527,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 
 <script>
 // ══ CONFIG ══
-const API = 'https://script.google.com/macros/s/AKfycbw48h4KY2zu3ONiNb61QNv_wsxAqpf2SjPWFJ6PyFuN2PRrIuxkzgJcfCrVjX4sn6yqgQ/exec';
+const API = 'https://script.google.com/macros/s/AKfycbx7kV9sAoindbPMGupAIKTqbHfVc2njtVaJLiWjnwoX6T4RoEukugOLVWg5VKrJwRavjA/exec';
 // La contraseña vive en el Apps Script, no acá
 
 // ══ STATE ══
@@ -639,6 +642,12 @@ window.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ══ ADMIN ══
+function togglePassVisibility(){
+  const inp=document.getElementById('loginPass');
+  const btn=document.getElementById('btnEye');
+  if(inp.type==='password'){inp.type='text';btn.textContent='🙈';}
+  else{inp.type='password';btn.textContent='👁';}
+}
 function openLogin(){document.getElementById('loginOverlay').classList.add('open');}
 async function checkLogin(){
   const pass = document.getElementById('loginPass').value;
