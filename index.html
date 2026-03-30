@@ -524,8 +524,8 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 
 <script>
 // ══ CONFIG ══
-const API = 'https://script.google.com/macros/s/AKfycbwK4te1TSRYQa3gwom1W8NjgAwTRtJwfISeHTcz8GJXM4BWs3UROTGZdcIvIkBTvlNmOg/exec';
-const ADMIN_PASS = 'admin123'; // Cambiá esta contraseña
+const API = 'https://script.google.com/macros/s/AKfycbw48h4KY2zu3ONiNb61QNv_wsxAqpf2SjPWFJ6PyFuN2PRrIuxkzgJcfCrVjX4sn6yqgQ/exec';
+// La contraseña vive en el Apps Script, no acá
 
 // ══ STATE ══
 const S={module:'mec',brand:'',model:'todos',filter:'todos'};
@@ -640,19 +640,30 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 // ══ ADMIN ══
 function openLogin(){document.getElementById('loginOverlay').classList.add('open');}
-function checkLogin(){
-  if(document.getElementById('loginPass').value===ADMIN_PASS){
-    isAdmin=true;
-    closeModal('loginOverlay');
-    document.getElementById('loginPass').value='';
-    applyAdminMode();
-    openAdminPanel();
-    showToast('Sesión iniciada','ok');
-  } else {
-    const i=document.getElementById('loginPass');
-    i.style.borderColor='var(--danger)';
-    setTimeout(()=>i.style.borderColor='',1000);
-    showToast('Contraseña incorrecta','err');
+async function checkLogin(){
+  const pass = document.getElementById('loginPass').value;
+  if(!pass){showToast('Ingresá la contraseña','err');return;}
+  const btn = document.querySelector('#loginOverlay .btn-primary');
+  btn.disabled=true; btn.textContent='Verificando...';
+  try {
+    const r = await apiPost('verifyPassword', {password: pass});
+    if(r.ok){
+      isAdmin=true;
+      closeModal('loginOverlay');
+      document.getElementById('loginPass').value='';
+      applyAdminMode();
+      openAdminPanel();
+      showToast('Sesión iniciada','ok');
+    } else {
+      const i=document.getElementById('loginPass');
+      i.style.borderColor='var(--danger)';
+      setTimeout(()=>i.style.borderColor='',1000);
+      showToast('Contraseña incorrecta','err');
+    }
+  } catch(e) {
+    showToast('Error de conexión','err');
+  } finally {
+    btn.disabled=false; btn.textContent='Ingresar';
   }
 }
 function logout(){isAdmin=false;applyAdminMode();showToast('Sesión cerrada','info');}
