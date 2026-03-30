@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Directorio de Manuales — Taller</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0f1117; --bg2:#161a24; --bg3:#1e2332; --border:#2a3045;
+  --accent:#e8a020; --accent2:#f0c060; --text:#e8eaf2;
+  --muted:#6b7494; --muted2:#9aa3c2;
+  --danger:#e05050; --success:#40c080; --teal:#30b0d0;
+  --mod-mec:#e8a020; --mod-tec:#30b0d0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.5;}
+
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.3rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text);}
+.logo span{color:var(--accent);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.admin-indicator{display:none;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(232,160,32,.12);border:1px solid rgba(232,160,32,.3);padding:4px 12px;border-radius:3px;}
+.admin-indicator.visible{display:flex;}
+.admin-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.btn-header{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--muted2);border-radius:4px;cursor:pointer;transition:all .2s;}
+.btn-header:hover{border-color:var(--accent);color:var(--accent);}
+.btn-header.danger:hover{border-color:var(--danger);color:var(--danger);}
+
+.app{display:flex;min-height:calc(100vh - 60px);}
+
+aside{width:270px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.module-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.module-tab{padding:14px 8px;text-align:center;cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:all .2s;border-bottom:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:5px;line-height:1.2;}
+.module-tab .tab-icon{font-size:1.1rem;}
+.module-tab:hover{color:var(--text);background:var(--bg3);}
+.module-tab.active-mec{color:var(--mod-mec);border-bottom-color:var(--mod-mec);background:rgba(232,160,32,.06);}
+.module-tab.active-tec{color:var(--mod-tec);border-bottom-color:var(--mod-tec);background:rgba(48,176,208,.06);}
+.sidebar-panel{display:none;flex-direction:column;flex:1;overflow-y:auto;}
+.sidebar-panel.active{display:flex;}
+.sidebar-label{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:1rem 1.25rem .4rem;}
+.brand-btn{display:flex;align-items:center;gap:10px;width:100%;padding:9px 1.25rem;background:transparent;border:none;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:500;text-align:left;cursor:pointer;transition:all .15s;position:relative;}
+.brand-btn:hover{background:var(--bg3);color:var(--text);}
+.brand-btn.active-mec{background:var(--bg3);color:var(--mod-mec);border-left:3px solid var(--mod-mec);}
+.brand-btn.active-tec{background:var(--bg3);color:var(--mod-tec);border-left:3px solid var(--mod-tec);}
+.brand-icon{width:28px;height:28px;border-radius:4px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;color:var(--muted2);flex-shrink:0;border:1px solid var(--border);text-transform:uppercase;}
+.brand-btn.active-mec .brand-icon{background:rgba(232,160,32,.15);color:var(--mod-mec);border-color:rgba(232,160,32,.4);}
+.brand-btn.active-tec .brand-icon{background:rgba(48,176,208,.15);color:var(--mod-tec);border-color:rgba(48,176,208,.4);}
+.brand-name-text{flex:1;}
+.btn-del-brand{display:none;margin-left:auto;padding:2px 6px;background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;border-radius:3px;transition:all .15s;flex-shrink:0;}
+.btn-del-brand:hover{color:var(--danger);}
+.admin-active .btn-del-brand{display:flex;align-items:center;justify-content:center;}
+.models-menu{display:none;background:var(--bg);}
+.models-menu.open{display:block;}
+.model-row{display:flex;align-items:center;}
+.model-btn{display:flex;align-items:center;gap:8px;flex:1;padding:7px 1.25rem 7px 3rem;background:transparent;border:none;color:var(--muted);font-family:'Barlow',sans-serif;font-size:.85rem;text-align:left;cursor:pointer;transition:all .15s;}
+.model-btn:hover{color:var(--text);}
+.model-btn.active{color:var(--mod-mec);}
+.model-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.5;}
+.model-btn.active .model-dot{opacity:1;}
+.btn-del-model{display:none;padding:4px 8px;background:transparent;border:none;color:var(--muted);font-size:.8rem;cursor:pointer;transition:all .15s;flex-shrink:0;margin-right:8px;}
+.btn-del-model:hover{color:var(--danger);}
+.admin-active .btn-del-model{display:flex;}
+.sidebar-divider{border:none;border-top:1px solid var(--border);margin:.5rem 0;}
+.btn-add-new{display:none;align-items:center;gap:10px;width:100%;padding:9px 1.25rem;background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.04em;text-align:left;cursor:pointer;transition:all .15s;}
+.btn-add-new:hover{color:var(--text);background:var(--bg3);}
+.btn-add-new .add-icon{width:28px;height:28px;border-radius:4px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--muted);flex-shrink:0;}
+.btn-add-new:hover .add-icon{border-color:var(--muted2);color:var(--text);}
+.admin-active .btn-add-new{display:flex;}
+
+main{flex:1;overflow-y:auto;}
+.module-bar{height:3px;background:var(--mod-mec);transition:background .3s;}
+.module-bar.tec{background:var(--mod-tec);}
+.search-bar{padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2);flex-wrap:wrap;}
+.search-icon{color:var(--muted);flex-shrink:0;}
+.search-input{flex:1;min-width:160px;background:transparent;border:none;outline:none;color:var(--text);font-family:'Barlow',sans-serif;font-size:.95rem;}
+.search-input::placeholder{color:var(--muted);}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.pill{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;}
+.pill:hover{border-color:var(--muted2);color:var(--text);}
+.pill.active-all-mec{background:rgba(232,160,32,.12);border-color:var(--mod-mec);color:var(--mod-mec);}
+.pill.active-all-tec{background:rgba(48,176,208,.12);border-color:var(--mod-tec);color:var(--mod-tec);}
+.pill.active-despiece{background:rgba(224,80,80,.12);border-color:var(--danger);color:var(--danger);}
+.pill.active-tecnico{background:rgba(48,176,208,.12);border-color:var(--teal);color:var(--teal);}
+.pill.active-mecanico{background:rgba(64,192,128,.12);border-color:var(--success);color:var(--success);}
+.breadcrumb{padding:1rem 2rem 0;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.breadcrumb strong{color:var(--text);font-weight:600;}
+.breadcrumb .sep{color:var(--border);}
+.mod-badge{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px;}
+.mod-badge.mec{background:rgba(232,160,32,.15);color:var(--mod-mec);border:1px solid rgba(232,160,32,.3);}
+.mod-badge.tec{background:rgba(48,176,208,.15);color:var(--mod-tec);border:1px solid rgba(48,176,208,.3);}
+.grid-header{padding:.75rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.grid-title{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;color:var(--text);}
+.grid-count{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg3);border:1px solid var(--border);padding:3px 10px;border-radius:3px;}
+.manuals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;border-top:1px solid var(--border);}
+.manual-card{background:var(--bg2);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.25rem 1.5rem;transition:background .15s;display:flex;flex-direction:column;gap:10px;}
+.manual-card:hover{background:var(--bg3);}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.card-type-badge{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;flex-shrink:0;}
+.badge-despiece{background:rgba(224,80,80,.15);color:var(--danger);border:1px solid rgba(224,80,80,.3);}
+.badge-tecnico{background:rgba(48,176,208,.15);color:var(--teal);border:1px solid rgba(48,176,208,.3);}
+.badge-mecanico{background:rgba(64,192,128,.15);color:var(--success);border:1px solid rgba(64,192,128,.3);}
+.card-file-icon{font-size:1.4rem;flex-shrink:0;}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);line-height:1.3;}
+.card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.meta-item{font-size:.78rem;color:var(--muted);}
+
+/* Card con link real: indicador visual */
+.card-has-link .card-title::after{content:' ↗';font-size:.8rem;color:var(--muted);font-weight:400;}
+
+.card-actions{display:flex;gap:8px;margin-top:4px;}
+.btn-view,.btn-dl{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:3px;cursor:pointer;border:1px solid var(--border);transition:all .15s;flex:1;text-align:center;}
+.btn-view{background:rgba(232,160,32,.1);color:var(--accent);border-color:rgba(232,160,32,.3);}
+.btn-view:hover{background:rgba(232,160,32,.2);}
+.btn-view:disabled{opacity:.35;cursor:not-allowed;}
+.btn-dl{background:transparent;color:var(--muted2);}
+.btn-dl:hover{border-color:var(--muted2);color:var(--text);}
+.btn-dl:disabled{opacity:.35;cursor:not-allowed;}
+.card-admin-actions{display:none;gap:6px;margin-top:2px;}
+.admin-active .card-admin-actions{display:flex;}
+.btn-card-edit,.btn-card-del{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;transition:all .15s;flex:1;text-align:center;}
+.btn-card-edit{background:transparent;border:1px solid var(--border);color:var(--muted2);}
+.btn-card-edit:hover{border-color:var(--mod-tec);color:var(--mod-tec);}
+.btn-card-del{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-card-del:hover{background:rgba(224,80,80,.1);border-color:var(--danger);color:var(--danger);}
+.empty-state{padding:4rem 2rem;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;grid-column:1/-1;}
+
+/* ── VISOR MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.92);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:960px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;}
+.modal-sm{max-width:440px;}
+.modal-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-shrink:0;}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);flex:1;}
+.modal-title.mec{color:var(--mod-mec);}
+.modal-title.tec{color:var(--mod-tec);}
+.modal-title.danger-color{color:var(--danger);}
+.modal-close{background:transparent;border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:4px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.modal-close:hover{border-color:var(--danger);color:var(--danger);}
+
+/* Visor de PDF */
+.viewer-body{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;}
+.viewer-toolbar{padding:.6rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--bg3);}
+.viewer-badge{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;background:rgba(64,192,128,.15);color:var(--success);border:1px solid rgba(64,192,128,.3);}
+.viewer-badge.no-link{background:rgba(224,80,80,.1);color:var(--muted);border-color:var(--border);}
+.viewer-filename{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;color:var(--muted2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.btn-toolbar{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);transition:all .15s;white-space:nowrap;}
+.btn-toolbar:hover{border-color:var(--accent);color:var(--accent);}
+.btn-toolbar.primary{background:rgba(232,160,32,.12);color:var(--accent);border-color:rgba(232,160,32,.3);}
+.btn-toolbar.primary:hover{background:rgba(232,160,32,.22);}
+.viewer-frame-wrap{flex:1;position:relative;min-height:0;}
+.viewer-iframe{width:100%;height:100%;border:none;display:block;}
+.viewer-nolink{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1rem;color:var(--muted);padding:2rem;text-align:center;}
+.viewer-nolink-icon{font-size:3rem;}
+.viewer-nolink-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--muted2);}
+.viewer-nolink-text{font-size:.88rem;line-height:1.6;max-width:400px;}
+.viewer-nolink-hint{font-size:.78rem;color:var(--border);background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:4px;font-family:monospace;}
+
+.modal-body-pad{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+
+/* Form */
+.form-row{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.form-label span{color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:.72rem;}
+.form-input,.form-select,.form-textarea{background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Barlow',sans-serif;font-size:.9rem;padding:8px 12px;outline:none;transition:border-color .15s;width:100%;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);}
+.form-select option{background:var(--bg3);}
+.form-textarea{resize:vertical;min-height:60px;font-family:monospace;font-size:.82rem;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* Link helper box */
+.link-helper{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1rem;display:flex;flex-direction:column;gap:8px;}
+.link-helper-title{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.link-step{display:flex;align-items:flex-start;gap:10px;font-size:.82rem;color:var(--muted2);}
+.link-step-num{width:20px;height:20px;border-radius:50%;background:rgba(232,160,32,.15);color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.link-preview{display:none;margin-top:4px;padding:8px 10px;background:rgba(64,192,128,.08);border:1px solid rgba(64,192,128,.25);border-radius:4px;font-size:.78rem;color:var(--success);font-family:monospace;word-break:break-all;}
+.link-preview.visible{display:block;}
+.link-error{display:none;margin-top:4px;padding:8px 10px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:4px;font-size:.78rem;color:var(--danger);}
+.link-error.visible{display:block;}
+
+.btn-primary{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px;border-radius:4px;cursor:pointer;border:none;background:var(--accent);color:#0f1117;width:100%;transition:all .2s;}
+.btn-primary:hover{background:var(--accent2);}
+.btn-danger-full{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px;border-radius:4px;cursor:pointer;background:rgba(224,80,80,.15);color:var(--danger);border:1px solid rgba(224,80,80,.4);width:100%;transition:all .2s;}
+.btn-danger-full:hover{background:rgba(224,80,80,.25);}
+.btn-secondary{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px;border-radius:4px;cursor:pointer;background:transparent;color:var(--muted);border:1px solid var(--border);width:100%;transition:all .2s;}
+.btn-secondary:hover{color:var(--text);border-color:var(--muted2);}
+
+/* Login */
+.login-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.97);z-index:400;align-items:center;justify-content:center;}
+.login-overlay.open{display:flex;}
+.login-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:2rem;width:100%;max-width:340px;text-align:center;}
+.login-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);margin-bottom:1.5rem;}
+.login-hint{font-size:.78rem;color:var(--muted);margin-top:.75rem;}
+
+/* Admin panel */
+.admin-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,20,.95);z-index:300;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;}
+.admin-overlay.open{display:flex;}
+.admin-panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:660px;}
+.admin-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.admin-header-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);}
+.admin-tabs{display:flex;border-bottom:1px solid var(--border);}
+.admin-tab{flex:1;padding:10px 8px;text-align:center;cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;}
+.admin-tab:hover{color:var(--text);}
+.admin-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.admin-tab-panel{display:none;padding:1.5rem;flex-direction:column;gap:1rem;}
+.admin-tab-panel.active{display:flex;}
+.admin-section-title{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+
+/* Manage lists */
+.manage-list{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto;}
+.manage-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:8px 10px;}
+.manage-item-name{flex:1;font-size:.88rem;color:var(--text);}
+.manage-item-sub{font-size:.75rem;color:var(--muted);}
+.manage-item-link{font-size:.72rem;color:var(--success);font-family:monospace;}
+.manage-item-nolink{font-size:.72rem;color:var(--muted);}
+.btn-sm{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;cursor:pointer;border:1px solid var(--border);background:transparent;transition:all .15s;}
+.btn-sm.edit{color:var(--teal);}
+.btn-sm.edit:hover{border-color:var(--teal);}
+.btn-sm.del{color:var(--danger);}
+.btn-sm.del:hover{border-color:var(--danger);background:rgba(224,80,80,.1);}
+
+/* Log */
+.log-list{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;}
+.log-item{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:8px 12px;display:flex;align-items:flex-start;gap:10px;}
+.log-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
+.log-text{font-size:.82rem;color:var(--muted2);flex:1;}
+.log-text strong{color:var(--text);font-weight:500;}
+.log-time{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;color:var(--muted);flex-shrink:0;margin-top:2px;}
+.log-empty{text-align:center;color:var(--muted);font-size:.85rem;padding:2rem;}
+
+/* Confirm */
+.confirm-box{background:var(--bg2);border:1px solid rgba(224,80,80,.4);border-radius:8px;width:100%;max-width:400px;padding:2rem;text-align:center;}
+.confirm-icon{font-size:2.5rem;margin-bottom:1rem;}
+.confirm-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:var(--danger);margin-bottom:.5rem;}
+.confirm-text{font-size:.88rem;color:var(--muted2);margin-bottom:1.5rem;line-height:1.5;}
+.confirm-actions{display:flex;gap:8px;}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.04em;padding:10px 18px;border-radius:4px;z-index:600;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{background:var(--bg3);border:1px solid var(--success);color:var(--success);}
+.toast.err{background:var(--bg3);border:1px solid var(--danger);color:var(--danger);}
+.toast.info{background:var(--bg3);border:1px solid var(--teal);color:var(--teal);}
+
+@media(max-width:680px){aside{width:220px;}.manuals-grid{grid-template-columns:1fr;}.form-row-2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Taller <span>///</span> Manuales</div>
+  <div class="header-right">
+    <div class="admin-indicator" id="adminIndicator"><div class="admin-dot"></div>Admin activo</div>
+    <button class="btn-header danger" id="btnLogout" style="display:none" onclick="logout()">Cerrar sesión</button>
+    <button class="btn-header" id="btnLogin" onclick="openLogin()">⚙ Panel Admin</button>
+  </div>
+</header>
+
+<div class="app">
+  <aside id="sidebarRoot">
+    <div class="module-tabs">
+      <button class="module-tab active-mec" id="tab-mec" onclick="switchModule('mec')">
+        <span class="tab-icon">🔧</span>Módulo<br>Mecánico
+      </button>
+      <button class="module-tab" id="tab-tec" onclick="switchModule('tec')">
+        <span class="tab-icon">⚙️</span>Módulo<br>Técnico
+      </button>
+    </div>
+    <div class="sidebar-panel active" id="panel-mec">
+      <div class="sidebar-label">Vehículos</div>
+      <div id="mec-brands-list"></div>
+      <hr class="sidebar-divider">
+      <div class="sidebar-label" id="lbl-add-mec" style="display:none">Agregar</div>
+      <button class="btn-add-new" onclick="openAddBrand('mec')"><div class="add-icon">+</div>Nueva marca</button>
+      <button class="btn-add-new" onclick="openAddModel()"><div class="add-icon">+</div>Nuevo modelo</button>
+    </div>
+    <div class="sidebar-panel" id="panel-tec">
+      <div class="sidebar-label">Marcas técnicas</div>
+      <div id="tec-brands-list"></div>
+      <hr class="sidebar-divider">
+      <div class="sidebar-label" id="lbl-add-tec" style="display:none">Agregar</div>
+      <button class="btn-add-new" onclick="openAddBrand('tec')"><div class="add-icon">+</div>Nueva marca</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="module-bar" id="moduleBar"></div>
+    <div class="search-bar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input class="search-input" id="searchInput" placeholder="Buscar manual..." oninput="renderCards()">
+      <div class="filter-pills" id="filterPills"></div>
+    </div>
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="grid-header">
+      <div class="grid-title" id="gridTitle"></div>
+      <div class="grid-count" id="gridCount"></div>
+    </div>
+    <div class="manuals-grid" id="manualsGrid"></div>
+  </main>
+</div>
+
+<!-- ══ VISOR MODAL ══ -->
+<div class="modal-overlay" id="viewerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle"></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn-toolbar primary" id="btnOpenTab" onclick="openInNewTab()" style="display:none">↗ Abrir en nueva pestaña</button>
+        <button class="modal-close" onclick="closeModal('viewerModal')">✕</button>
+      </div>
+    </div>
+    <div class="viewer-body">
+      <div class="viewer-toolbar">
+        <span class="viewer-badge" id="viewerBadge">Con archivo</span>
+        <span class="viewer-filename" id="viewerFilename"></span>
+        <button class="btn-toolbar" id="btnDownload" onclick="downloadFile()">⬇ Descargar</button>
+      </div>
+      <div class="viewer-frame-wrap" id="viewerFrameWrap">
+        <!-- contenido dinámico -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT MANUAL ══ -->
+<div class="modal-overlay" id="editManualModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <div class="modal-title">Editar manual</div>
+      <button class="modal-close" onclick="closeModal('editManualModal')">✕</button>
+    </div>
+    <div class="modal-body-pad">
+      <div class="form-row">
+        <label class="form-label">Nombre del manual</label>
+        <input class="form-input" id="editManualName">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Tipo</label>
+        <select class="form-select" id="editManualType">
+          <option value="Despiece">Despiece</option>
+          <option value="Técnico">Técnico</option>
+          <option value="Mecánico">Mecánico</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Link de Google Drive <span>(opcional — podés actualizar el archivo)</span></label>
+        <input class="form-input" id="editManualLink" placeholder="https://drive.google.com/file/d/...">
+        <div class="link-preview" id="editLinkPreview"></div>
+        <div class="link-error" id="editLinkError"></div>
+      </div>
+      <button class="btn-primary" onclick="confirmEditManual()">Guardar cambios</button>
+      <button class="btn-secondary" onclick="closeModal('editManualModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONFIRM DELETE ══ -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑</div>
+    <div class="confirm-title" id="confirmTitle">¿Eliminar?</div>
+    <div class="confirm-text" id="confirmText"></div>
+    <div class="confirm-actions">
+      <button class="btn-secondary" onclick="closeModal('confirmModal')">Cancelar</button>
+      <button class="btn-danger-full" id="confirmBtn">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADD BRAND ══ -->
+<div class="modal-overlay" id="addBrandModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <div class="modal-title" id="addBrandTitle">Nueva marca</div>
+      <button class="modal-close" onclick="closeModal('addBrandModal')">✕</button>
+    </div>
+    <div class="modal-body-pad">
+      <div class="form-row">
+        <label class="form-label">Nombre de la marca</label>
+        <input class="form-input" id="newBrandName" placeholder="Ej: Mercedes-Benz">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Sigla (hasta 4 letras)</label>
+        <input class="form-input" id="newBrandSigla" placeholder="Ej: MBZ" maxlength="4">
+      </div>
+      <button class="btn-primary" onclick="confirmAddBrand()">+ Agregar marca</button>
+      <button class="btn-secondary" onclick="closeModal('addBrandModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADD MODEL ══ -->
+<div class="modal-overlay" id="addModelModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <div class="modal-title mec">Nuevo modelo</div>
+      <button class="modal-close" onclick="closeModal('addModelModal')">✕</button>
+    </div>
+    <div class="modal-body-pad">
+      <div class="form-row">
+        <label class="form-label">Marca</label>
+        <select class="form-select" id="newModelBrand"></select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Nombre del modelo</label>
+        <input class="form-input" id="newModelName" placeholder="Ej: Power Daily">
+      </div>
+      <button class="btn-primary" onclick="confirmAddModel()">+ Agregar modelo</button>
+      <button class="btn-secondary" onclick="closeModal('addModelModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-title">🔒 Acceso Admin</div>
+    <div class="form-row" style="text-align:left;margin-bottom:1rem">
+      <label class="form-label">Contraseña</label>
+      <input class="form-input" type="password" id="loginPass" placeholder="Ingresá la contraseña" onkeydown="if(event.key==='Enter')checkLogin()">
+    </div>
+    <button class="btn-primary" onclick="checkLogin()">Ingresar</button>
+    <button class="btn-secondary" style="margin-top:.5rem" onclick="closeModal('loginOverlay')">Cancelar</button>
+    <div class="login-hint">Contraseña demo: <strong>admin123</strong></div>
+  </div>
+</div>
+
+<!-- ══ ADMIN PANEL ══ -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-panel">
+    <div class="admin-header">
+      <div class="admin-header-title">⚙ Panel de administración</div>
+      <button class="modal-close" onclick="closeModal('adminOverlay')">✕</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('manuales',this)">Manuales</button>
+      <button class="admin-tab" onclick="switchAdminTab('flota',this)">Flota</button>
+      <button class="admin-tab" onclick="switchAdminTab('log',this)">Historial</button>
+    </div>
+
+    <!-- TAB MANUALES -->
+    <div class="admin-tab-panel active" id="atab-manuales">
+      <div class="admin-section-title">Agregar nuevo manual</div>
+      <div class="form-row">
+        <label class="form-label">Módulo</label>
+        <select class="form-select" id="f-module" onchange="updateAdminForm()">
+          <option value="mec">🔧 Módulo Mecánico</option>
+          <option value="tec">⚙️ Módulo Técnico</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Nombre del manual</label>
+        <input class="form-input" id="f-name" placeholder="Ej: Manual motor F1C Euro 6">
+      </div>
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">Marca</label>
+          <select class="form-select" id="f-brand" onchange="updateAdminModels()"></select>
+        </div>
+        <div class="form-row" id="f-model-row">
+          <label class="form-label">Modelo</label>
+          <select class="form-select" id="f-model"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Tipo de manual</label>
+        <select class="form-select" id="f-type">
+          <option value="Despiece">Despiece</option>
+          <option value="Técnico">Técnico</option>
+          <option value="Mecánico">Mecánico</option>
+        </select>
+      </div>
+
+      <!-- LINK GOOGLE DRIVE -->
+      <div class="form-row">
+        <label class="form-label">Link de Google Drive <span>(pegá el link para compartir del archivo)</span></label>
+        <input class="form-input" id="f-link" placeholder="https://drive.google.com/file/d/XXXX/view?usp=sharing" oninput="validateDriveLink(this.value,'f-link-preview','f-link-error')">
+        <div class="link-preview" id="f-link-preview"></div>
+        <div class="link-error" id="f-link-error"></div>
+      </div>
+
+      <div class="link-helper">
+        <div class="link-helper-title">¿Cómo obtener el link de Google Drive?</div>
+        <div class="link-step"><div class="link-step-num">1</div><span>Subí el PDF a tu Google Drive</span></div>
+        <div class="link-step"><div class="link-step-num">2</div><span>Clic derecho sobre el archivo → <strong>Compartir</strong></span></div>
+        <div class="link-step"><div class="link-step-num">3</div><span>Cambiá el acceso a <strong>"Cualquier persona con el enlace"</strong></span></div>
+        <div class="link-step"><div class="link-step-num">4</div><span>Copiá el link y pegalo arriba</span></div>
+      </div>
+
+      <button class="btn-primary" onclick="addManual()">+ Agregar manual</button>
+      <div class="admin-section-title" style="margin-top:.25rem">Manuales cargados</div>
+      <div class="manage-list" id="adminManualList"></div>
+    </div>
+
+    <!-- TAB FLOTA -->
+    <div class="admin-tab-panel" id="atab-flota">
+      <div class="admin-section-title">Marcas — Módulo Mecánico</div>
+      <div class="manage-list" id="flota-mec-brands"></div>
+      <div class="admin-section-title" style="margin-top:.5rem">Modelos — Módulo Mecánico</div>
+      <div class="manage-list" id="flota-mec-models"></div>
+      <div class="admin-section-title" style="margin-top:.5rem">Marcas — Módulo Técnico</div>
+      <div class="manage-list" id="flota-tec-brands"></div>
+    </div>
+
+    <!-- TAB LOG -->
+    <div class="admin-tab-panel" id="atab-log">
+      <div class="admin-section-title">Historial de cambios</div>
+      <div class="log-list" id="logList"></div>
+      <button class="btn-secondary" onclick="clearLog()" style="margin-top:.5rem">Limpiar historial</button>
+    </div>
+
+    <div style="padding:1rem 1.5rem;border-top:1px solid var(--border);">
+      <button class="btn-secondary" onclick="closeModal('adminOverlay')">Cerrar panel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ STATE ══
+const S={module:'mec',brand:'Iveco',model:'todos',filter:'todos'};
+let isAdmin=false, addingFor='mec', editingId=null, viewingId=null, nextId=24;
+let activityLog=[];
+
+// ══ DATA ══
+const mecBrands=[{name:'Iveco',sigla:'IVE',models:['Daily','Tector','Stralis','Eurocargo']}];
+const tecBrands=[
+  {name:'AMS',sigla:'AMS'},{name:'Farid',sigla:'FAR'},
+  {name:'Palvi',sigla:'PAL'},{name:'Themac',sigla:'THE'},{name:'OMB',sigla:'OMB'}
+];
+let manuals=[
+  {id:1, mod:'mec',brand:'Iveco',model:'Daily',    type:'Despiece',name:'Despiece motor F1C 3.0 Euro 5',        size:'18.4 MB',ext:'pdf',date:'Mar 2024',link:''},
+  {id:2, mod:'mec',brand:'Iveco',model:'Daily',    type:'Técnico', name:'Manual técnico caja de cambios ZF',    size:'9.2 MB', ext:'pdf',date:'Ene 2024',link:''},
+  {id:3, mod:'mec',brand:'Iveco',model:'Daily',    type:'Mecánico',name:'Frenos y suspensión Daily',            size:'5.7 MB', ext:'pdf',date:'Nov 2023',link:''},
+  {id:4, mod:'mec',brand:'Iveco',model:'Daily',    type:'Despiece',name:'Catálogo eléctrico Daily 35S',         size:'22.1 MB',ext:'pdf',date:'Feb 2024',link:''},
+  {id:5, mod:'mec',brand:'Iveco',model:'Tector',   type:'Técnico', name:'Manual técnico motor Cursor 8',        size:'31.5 MB',ext:'pdf',date:'Abr 2024',link:''},
+  {id:6, mod:'mec',brand:'Iveco',model:'Tector',   type:'Despiece',name:'Despiece chasis Tector 170E28',        size:'14.8 MB',ext:'pdf',date:'Mar 2023',link:''},
+  {id:7, mod:'mec',brand:'Iveco',model:'Tector',   type:'Mecánico',name:'Ajuste y calibración inyectores',      size:'3.2 MB', ext:'pdf',date:'May 2024',link:''},
+  {id:8, mod:'mec',brand:'Iveco',model:'Stralis',  type:'Técnico', name:'Manual técnico Stralis Hi-Way',        size:'45.0 MB',ext:'pdf',date:'Ene 2023',link:''},
+  {id:9, mod:'mec',brand:'Iveco',model:'Stralis',  type:'Despiece',name:'Despiece cabina Stralis',              size:'11.3 MB',ext:'pdf',date:'Oct 2023',link:''},
+  {id:10,mod:'mec',brand:'Iveco',model:'Stralis',  type:'Mecánico',name:'Sistema frenos EBS Stralis',           size:'7.4 MB', ext:'pdf',date:'Jun 2024',link:''},
+  {id:11,mod:'mec',brand:'Iveco',model:'Eurocargo',type:'Despiece',name:'Despiece motor Tector 4 cilindros',   size:'16.9 MB',ext:'pdf',date:'Sep 2023',link:''},
+  {id:12,mod:'mec',brand:'Iveco',model:'Eurocargo',type:'Técnico', name:'Diagnóstico electrónico Eurocargo ML', size:'8.8 MB', ext:'pdf',date:'Feb 2024',link:''},
+  {id:13,mod:'mec',brand:'Iveco',model:'Eurocargo',type:'Mecánico',name:'Mantenimiento preventivo 500hs',       size:'2.9 MB', ext:'pdf',date:'Jul 2024',link:''},
+  {id:14,mod:'tec',brand:'AMS',  model:'-',type:'Técnico', name:'Manual técnico AMS sistema de control',   size:'12.0 MB',ext:'pdf',date:'Mar 2024',link:''},
+  {id:15,mod:'tec',brand:'AMS',  model:'-',type:'Despiece',name:'Catálogo repuestos AMS serie 2000',       size:'8.5 MB', ext:'pdf',date:'Ene 2024',link:''},
+  {id:16,mod:'tec',brand:'Farid',model:'-',type:'Técnico', name:'Manual operación Farid compactador',      size:'19.2 MB',ext:'pdf',date:'Feb 2024',link:''},
+  {id:17,mod:'tec',brand:'Farid',model:'-',type:'Mecánico',name:'Mantenimiento hidráulico Farid',          size:'6.3 MB', ext:'pdf',date:'Abr 2024',link:''},
+  {id:18,mod:'tec',brand:'Palvi',model:'-',type:'Técnico', name:'Manual eléctrico Palvi carrocería',       size:'4.7 MB', ext:'pdf',date:'Nov 2023',link:''},
+  {id:19,mod:'tec',brand:'Palvi',model:'-',type:'Despiece',name:'Despiece caja de carga Palvi',            size:'10.1 MB',ext:'pdf',date:'May 2024',link:''},
+  {id:20,mod:'tec',brand:'Themac',model:'-',type:'Técnico', name:'Manual Themac bomba de vacío',           size:'7.8 MB', ext:'pdf',date:'Jun 2024',link:''},
+  {id:21,mod:'tec',brand:'Themac',model:'-',type:'Mecánico',name:'Procedimientos Themac limpieza tanque',  size:'3.4 MB', ext:'pdf',date:'Jul 2024',link:''},
+  {id:22,mod:'tec',brand:'OMB',  model:'-',type:'Técnico', name:'Manual OMB sistema GNC',                  size:'22.5 MB',ext:'pdf',date:'Ago 2024',link:''},
+  {id:23,mod:'tec',brand:'OMB',  model:'-',type:'Despiece',name:'Catálogo válvulas y accesorios OMB',      size:'9.0 MB', ext:'pdf',date:'Sep 2024',link:''},
+];
+
+// ══ GOOGLE DRIVE UTILS ══
+// Convierte cualquier formato de link de Drive a embed URL para iframe
+// y a download URL para descargar
+function parseDriveLink(url){
+  if(!url||!url.trim())return null;
+  // Formato: https://drive.google.com/file/d/FILE_ID/view...
+  let m=url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if(m)return m[1];
+  // Formato: https://drive.google.com/open?id=FILE_ID
+  m=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(m)return m[1];
+  return null;
+}
+function driveEmbedUrl(fileId){
+  return `https://drive.google.com/file/d/${fileId}/preview`;
+}
+function driveDownloadUrl(fileId){
+  return `https://drive.google.com/uc?export=download&id=${fileId}`;
+}
+function driveViewUrl(fileId){
+  return `https://drive.google.com/file/d/${fileId}/view`;
+}
+
+function validateDriveLink(val,previewId,errorId){
+  const prev=document.getElementById(previewId);
+  const err=document.getElementById(errorId);
+  if(!val.trim()){prev.className='link-preview';err.className='link-error';return null;}
+  const id=parseDriveLink(val);
+  if(id){
+    prev.className='link-preview visible';
+    prev.textContent='✓ Link válido — ID: '+id;
+    err.className='link-error';
+    return id;
+  } else {
+    err.className='link-error visible';
+    err.textContent='Link no reconocido. Usá el link "Compartir" de Google Drive.';
+    prev.className='link-preview';
+    return null;
+  }
+}
+
+// ══ UTILS ══
+function getIcon(ext){return{pdf:'📄',jpg:'🖼',png:'🖼',jpeg:'🖼',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊'}[ext]||'📁';}
+function getBadge(t){return{Despiece:'badge-despiece',Técnico:'badge-tecnico',Mecánico:'badge-mecanico'}[t]||'';}
+function nowStr(){const n=new Date();return n.toLocaleDateString('es-AR')+' '+n.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});}
+function logAction(icon,text){activityLog.unshift({icon,text,time:nowStr()});renderLog();}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function showToast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',2800);}
+
+// ══ ADMIN SESSION ══
+function openLogin(){document.getElementById('loginOverlay').classList.add('open');}
+function checkLogin(){
+  if(document.getElementById('loginPass').value==='admin123'){
+    isAdmin=true;
+    closeModal('loginOverlay');
+    document.getElementById('loginPass').value='';
+    applyAdminMode();
+    document.getElementById('adminOverlay').classList.add('open');
+    updateAdminForm();renderAdminManualList();renderFlotaTab();renderLog();
+    showToast('Sesión admin iniciada','ok');
+  } else {
+    const i=document.getElementById('loginPass');
+    i.style.borderColor='var(--danger)';
+    setTimeout(()=>i.style.borderColor='',1000);
+    showToast('Contraseña incorrecta','err');
+  }
+}
+function logout(){
+  isAdmin=false; applyAdminMode();
+  document.getElementById('btnLogin').style.display='';
+  document.getElementById('btnLogout').style.display='none';
+  document.getElementById('adminIndicator').classList.remove('visible');
+  showToast('Sesión cerrada','info');
+}
+function applyAdminMode(){
+  document.getElementById('sidebarRoot').classList.toggle('admin-active',isAdmin);
+  document.getElementById('manualsGrid').classList.toggle('admin-active',isAdmin);
+  document.getElementById('lbl-add-mec').style.display=isAdmin?'':'none';
+  document.getElementById('lbl-add-tec').style.display=isAdmin?'':'none';
+  document.getElementById('adminIndicator').classList.toggle('visible',isAdmin);
+  document.getElementById('btnLogout').style.display=isAdmin?'':'none';
+  document.getElementById('btnLogin').style.display=isAdmin?'none':'';
+  renderCards();
+}
+
+// ══ MODULE ══
+function switchModule(mod){
+  S.module=mod;S.filter='todos';
+  document.getElementById('tab-mec').className='module-tab'+(mod==='mec'?' active-mec':'');
+  document.getElementById('tab-tec').className='module-tab'+(mod==='tec'?' active-tec':'');
+  document.getElementById('panel-mec').className='sidebar-panel'+(mod==='mec'?' active':'');
+  document.getElementById('panel-tec').className='sidebar-panel'+(mod==='tec'?' active':'');
+  document.getElementById('moduleBar').className='module-bar'+(mod==='tec'?' tec':'');
+  if(mod==='mec'){S.brand=mecBrands[0].name;S.model='todos';}
+  else{S.brand=tecBrands[0].name;S.model='-';renderTecBrands();}
+  renderFilters();updateBreadcrumb();renderCards();
+}
+
+// ══ SIDEBAR ══
+function renderMecBrands(){
+  document.getElementById('mec-brands-list').innerHTML=mecBrands.map(b=>`
+    <button class="brand-btn ${S.brand===b.name?'active-mec':''}" onclick="selectBrand('${b.name}',this)">
+      <div class="brand-icon">${b.sigla}</div>
+      <span class="brand-name-text">${b.name}</span>
+      <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('mec','${b.name}')">✕</span>
+    </button>
+    <div class="models-menu ${S.brand===b.name?'open':''}" id="models-${b.name}">
+      <div class="model-row"><button class="model-btn ${S.model==='todos'&&S.brand===b.name?'active':''}" onclick="selectModel('todos','${b.name}',this)"><div class="model-dot"></div>Todos los modelos</button></div>
+      ${b.models.map(m=>`
+        <div class="model-row">
+          <button class="model-btn ${S.model===m&&S.brand===b.name?'active':''}" onclick="selectModel('${m}','${b.name}',this)"><div class="model-dot"></div>${m}</button>
+          <button class="btn-del-model" onclick="confirmDeleteModel('${b.name}','${m}')">✕</button>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function renderTecBrands(){
+  document.getElementById('tec-brands-list').innerHTML=tecBrands.map(b=>`
+    <button class="brand-btn ${S.brand===b.name&&S.module==='tec'?'active-tec':''}" onclick="selectTecBrand('${b.name}',this)">
+      <div class="brand-icon" style="${S.brand===b.name&&S.module==='tec'?'background:rgba(48,176,208,.15);color:var(--mod-tec);border-color:rgba(48,176,208,.4)':''}">${b.sigla}</div>
+      <span class="brand-name-text">${b.name}</span>
+      <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('tec','${b.name}')">✕</span>
+    </button>`).join('');
+}
+function selectBrand(brand,el){S.brand=brand;S.model='todos';S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();}
+function selectTecBrand(name,el){S.brand=name;S.model='-';S.filter='todos';renderTecBrands();renderFilters();updateBreadcrumb();renderCards();}
+function selectModel(model,brand,el){S.model=model;S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();}
+
+// ══ FILTERS ══
+function renderFilters(){
+  const ac=S.module==='mec'?'active-all-mec':'active-all-tec';
+  document.getElementById('filterPills').innerHTML=`
+    <button class="pill ${S.filter==='todos'?ac:''}" onclick="setFilter('todos')">Todos</button>
+    <button class="pill ${S.filter==='Despiece'?'active-despiece':''}" onclick="setFilter('Despiece')">Despiece</button>
+    <button class="pill ${S.filter==='Técnico'?'active-tecnico':''}" onclick="setFilter('Técnico')">Técnico</button>
+    <button class="pill ${S.filter==='Mecánico'?'active-mecanico':''}" onclick="setFilter('Mecánico')">Mecánico</button>`;
+}
+function setFilter(f){S.filter=f;renderFilters();renderCards();}
+
+// ══ BREADCRUMB ══
+function updateBreadcrumb(){
+  const badge=`<span class="mod-badge ${S.module}">${S.module==='mec'?'🔧 Mecánico':'⚙️ Técnico'}</span>`;
+  if(S.module==='mec'){
+    const ml=S.model==='todos'?'Todos los modelos':S.model;
+    document.getElementById('breadcrumb').innerHTML=`${badge}<span class="sep">›</span><strong>${S.brand}</strong><span class="sep">›</span><span>${ml}</span>`;
+    document.getElementById('gridTitle').textContent=S.model==='todos'?'Todos — '+S.brand:S.brand+' '+S.model;
+  } else {
+    document.getElementById('breadcrumb').innerHTML=`${badge}<span class="sep">›</span><strong>${S.brand}</strong>`;
+    document.getElementById('gridTitle').textContent=S.brand;
+  }
+}
+
+// ══ CARDS ══
+function renderCards(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const data=manuals.filter(m=>
+    m.mod===S.module&&m.brand===S.brand&&
+    (S.module==='tec'||S.model==='todos'||m.model===S.model)&&
+    (S.filter==='todos'||m.type===S.filter)&&
+    (!q||m.name.toLowerCase().includes(q)||m.type.toLowerCase().includes(q))
+  );
+  document.getElementById('gridCount').textContent=data.length+' manual'+(data.length!==1?'es':'');
+  const grid=document.getElementById('manualsGrid');
+  if(!data.length){grid.innerHTML='<div class="empty-state">No se encontraron manuales para la selección actual.</div>';return;}
+
+  grid.innerHTML=data.map(m=>{
+    const hasLink=!!m.link;
+    const viewDisabled=!hasLink?' disabled title="Sin archivo cargado aún"':'';
+    const dlDisabled=!hasLink?' disabled title="Sin archivo cargado aún"':'';
+    return `
+    <div class="manual-card ${hasLink?'card-has-link':''}">
+      <div class="card-top">
+        <div class="card-type-badge ${getBadge(m.type)}">${m.type}</div>
+        <div class="card-file-icon">${getIcon(m.ext)}</div>
+      </div>
+      <div class="card-title">${m.name}</div>
+      <div class="card-meta">
+        <span class="meta-item">🏷 ${m.brand}${m.model!=='-'?' · '+m.model:''}</span>
+        <span class="meta-item"> · ${m.size} · ${m.date}</span>
+        ${hasLink?'<span class="meta-item" style="color:var(--success)">● Archivo cargado</span>':'<span class="meta-item" style="color:var(--muted)">○ Sin archivo</span>'}
+      </div>
+      <div class="card-actions">
+        <button class="btn-view"${viewDisabled} onclick="openViewer(${m.id})">Ver manual</button>
+        <button class="btn-dl"${dlDisabled} onclick="downloadManual(${m.id})">⬇ Descargar</button>
+      </div>
+      <div class="card-admin-actions">
+        <button class="btn-card-edit" onclick="openEditManual(${m.id})">✏ Editar</button>
+        <button class="btn-card-del" onclick="confirmDeleteManual(${m.id})">🗑 Eliminar</button>
+      </div>
+    </div>`}).join('');
+
+  if(isAdmin)document.getElementById('manualsGrid').classList.add('admin-active');
+}
+
+// ══ VISOR ══
+let currentViewUrl='';
+function openViewer(id){
+  const m=manuals.find(x=>x.id===id);if(!m)return;
+  viewingId=id;
+  document.getElementById('modalTitle').textContent=m.name;
+  document.getElementById('viewerFilename').textContent=m.name+' · '+m.brand+(m.model!=='-'?' '+m.model:'')+' · '+m.type;
+
+  const wrap=document.getElementById('viewerFrameWrap');
+  const badge=document.getElementById('viewerBadge');
+  const btnTab=document.getElementById('btnOpenTab');
+  const btnDl=document.getElementById('btnDownload');
+
+  const fileId=m.link?parseDriveLink(m.link):null;
+
+  if(fileId){
+    currentViewUrl=driveViewUrl(fileId);
+    badge.textContent='Archivo cargado';
+    badge.className='viewer-badge';
+    btnTab.style.display='';
+    btnDl.style.display='';
+    wrap.innerHTML=`<iframe class="viewer-iframe" src="${driveEmbedUrl(fileId)}" allow="autoplay" allowfullscreen></iframe>`;
+  } else {
+    currentViewUrl='';
+    badge.textContent='Sin archivo';
+    badge.className='viewer-badge no-link';
+    btnTab.style.display='none';
+    btnDl.style.display='none';
+    wrap.innerHTML=`
+      <div class="viewer-nolink">
+        <div class="viewer-nolink-icon">📂</div>
+        <div class="viewer-nolink-title">Archivo no cargado aún</div>
+        <div class="viewer-nolink-text">Este manual todavía no tiene un archivo de Google Drive asociado.${isAdmin?' Editá el manual desde el panel admin para agregar el link.':' Consultá al administrador del sistema.'}</div>
+        ${isAdmin?`<div class="viewer-nolink-hint">Panel Admin → buscar "${m.name.substring(0,30)}..." → ✏ Editar</div>`:''}
+      </div>`;
+  }
+  document.getElementById('viewerModal').classList.add('open');
+}
+function openInNewTab(){if(currentViewUrl)window.open(currentViewUrl,'_blank');}
+function downloadManual(id){
+  const m=manuals.find(x=>x.id===id);if(!m||!m.link)return;
+  const fileId=parseDriveLink(m.link);
+  if(fileId){window.open(driveDownloadUrl(fileId),'_blank');showToast('Descarga iniciada','ok');}
+}
+function downloadFile(){
+  const m=manuals.find(x=>x.id===viewingId);
+  if(m)downloadManual(m.id);
+}
+
+// ══ EDIT MANUAL ══
+function openEditManual(id){
+  if(!isAdmin)return;
+  const m=manuals.find(x=>x.id===id);if(!m)return;
+  editingId=id;
+  document.getElementById('editManualName').value=m.name;
+  document.getElementById('editManualType').value=m.type;
+  document.getElementById('editManualLink').value=m.link||'';
+  document.getElementById('editLinkPreview').className='link-preview';
+  document.getElementById('editLinkError').className='link-error';
+  if(m.link)validateDriveLink(m.link,'editLinkPreview','editLinkError');
+  document.getElementById('editManualLink').oninput=function(){validateDriveLink(this.value,'editLinkPreview','editLinkError');};
+  document.getElementById('editManualModal').classList.add('open');
+}
+function confirmEditManual(){
+  const m=manuals.find(x=>x.id===editingId);if(!m)return;
+  const oldName=m.name;
+  const newLink=document.getElementById('editManualLink').value.trim();
+  const fileId=newLink?parseDriveLink(newLink):null;
+  if(newLink&&!fileId){showToast('El link de Drive no es válido','err');return;}
+  m.name=document.getElementById('editManualName').value.trim()||m.name;
+  m.type=document.getElementById('editManualType').value;
+  m.link=newLink;
+  m.date='Hoy (editado)';
+  closeModal('editManualModal');
+  renderCards();renderAdminManualList();
+  logAction('✏','Manual actualizado: <strong>'+m.name+'</strong>'+(newLink&&fileId?' — archivo Drive vinculado':''));
+  showToast('Manual actualizado','ok');
+}
+
+// ══ DELETE MANUAL ══
+function confirmDeleteManual(id){
+  if(!isAdmin)return;
+  const m=manuals.find(x=>x.id===id);if(!m)return;
+  document.getElementById('confirmTitle').textContent='¿Eliminar manual?';
+  document.getElementById('confirmText').innerHTML='Vas a eliminar permanentemente:<br><strong>"'+m.name+'"</strong><br>Esta acción no se puede deshacer.';
+  document.getElementById('confirmBtn').onclick=()=>{
+    manuals=manuals.filter(x=>x.id!==id);
+    closeModal('confirmModal');
+    renderCards();renderAdminManualList();
+    logAction('🗑','Manual eliminado: <strong>'+m.name+'</strong>');
+    showToast('Manual eliminado','err');
+  };
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+// ══ DELETE BRAND ══
+function confirmDeleteBrand(mod,name){
+  if(!isAdmin)return;
+  document.getElementById('confirmTitle').textContent='¿Eliminar marca?';
+  document.getElementById('confirmText').innerHTML='Vas a eliminar <strong>"'+name+'"</strong> y todos sus manuales.<br>Esta acción no se puede deshacer.';
+  document.getElementById('confirmBtn').onclick=()=>{
+    if(mod==='mec'){const i=mecBrands.findIndex(x=>x.name===name);if(i>-1)mecBrands.splice(i,1);manuals=manuals.filter(m=>!(m.mod==='mec'&&m.brand===name));if(S.brand===name&&mecBrands.length){S.brand=mecBrands[0].name;S.model='todos';}renderMecBrands();}
+    else{const i=tecBrands.findIndex(x=>x.name===name);if(i>-1)tecBrands.splice(i,1);manuals=manuals.filter(m=>!(m.mod==='tec'&&m.brand===name));if(S.brand===name&&tecBrands.length)S.brand=tecBrands[0].name;renderTecBrands();}
+    closeModal('confirmModal');updateBreadcrumb();renderCards();renderFlotaTab();renderAdminManualList();
+    logAction('🗑','Marca eliminada: <strong>'+name+'</strong>');showToast('Marca eliminada','err');
+  };
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+// ══ DELETE MODEL ══
+function confirmDeleteModel(brand,model){
+  if(!isAdmin)return;
+  document.getElementById('confirmTitle').textContent='¿Eliminar modelo?';
+  document.getElementById('confirmText').innerHTML='Vas a eliminar el modelo <strong>"'+model+'"</strong> de '+brand+' y sus manuales.';
+  document.getElementById('confirmBtn').onclick=()=>{
+    const b=mecBrands.find(x=>x.name===brand);if(b)b.models=b.models.filter(m=>m!==model);
+    manuals=manuals.filter(m=>!(m.brand===brand&&m.model===model));
+    if(S.model===model)S.model='todos';
+    closeModal('confirmModal');renderMecBrands();updateBreadcrumb();renderCards();renderFlotaTab();renderAdminManualList();
+    logAction('🗑','Modelo eliminado: <strong>'+model+'</strong> de '+brand);showToast('Modelo eliminado','err');
+  };
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+// ══ ADD BRAND ══
+function openAddBrand(mod){
+  if(!isAdmin)return;
+  addingFor=mod;
+  const t=document.getElementById('addBrandTitle');
+  t.textContent=mod==='mec'?'Nueva marca — Mecánico':'Nueva marca — Técnico';
+  t.className='modal-title '+(mod==='mec'?'mec':'tec');
+  document.getElementById('newBrandName').value='';
+  document.getElementById('newBrandSigla').value='';
+  document.getElementById('addBrandModal').classList.add('open');
+}
+function confirmAddBrand(){
+  const name=document.getElementById('newBrandName').value.trim();
+  const sigla=(document.getElementById('newBrandSigla').value.trim()||name.substring(0,3)).toUpperCase();
+  if(!name){showToast('Ingresá el nombre','err');return;}
+  if(addingFor==='mec'){mecBrands.push({name,sigla,models:[]});renderMecBrands();}
+  else{tecBrands.push({name,sigla});renderTecBrands();}
+  closeModal('addBrandModal');renderFlotaTab();renderAdminManualList();
+  logAction('➕','Marca agregada: <strong>'+name+'</strong>');showToast('Marca "'+name+'" agregada','ok');
+}
+
+// ══ ADD MODEL ══
+function openAddModel(){
+  if(!isAdmin)return;
+  document.getElementById('newModelBrand').innerHTML=mecBrands.map(b=>`<option value="${b.name}">${b.name}</option>`).join('');
+  document.getElementById('newModelName').value='';
+  document.getElementById('addModelModal').classList.add('open');
+}
+function confirmAddModel(){
+  const brand=document.getElementById('newModelBrand').value;
+  const model=document.getElementById('newModelName').value.trim();
+  if(!model){showToast('Ingresá el nombre del modelo','err');return;}
+  const b=mecBrands.find(x=>x.name===brand);
+  if(b&&!b.models.includes(model))b.models.push(model);
+  closeModal('addModelModal');renderMecBrands();renderFlotaTab();
+  logAction('➕','Modelo agregado: <strong>'+model+'</strong> a '+brand);showToast('Modelo "'+model+'" agregado','ok');
+}
+
+// ══ ADD MANUAL ══
+function updateAdminForm(){
+  const mod=document.getElementById('f-module').value;
+  document.getElementById('f-brand').innerHTML=(mod==='mec'?mecBrands:tecBrands).map(b=>`<option value="${b.name}">${b.name}</option>`).join('');
+  document.getElementById('f-model-row').style.display=mod==='tec'?'none':'';
+  updateAdminModels();
+}
+function updateAdminModels(){
+  if(document.getElementById('f-module').value==='tec')return;
+  const b=mecBrands.find(x=>x.name===document.getElementById('f-brand').value);
+  document.getElementById('f-model').innerHTML=(b?b.models:[]).map(m=>`<option value="${m}">${m}</option>`).join('');
+}
+function addManual(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){showToast('Ingresá el nombre del manual','err');return;}
+  const rawLink=document.getElementById('f-link').value.trim();
+  const fileId=rawLink?parseDriveLink(rawLink):null;
+  if(rawLink&&!fileId){showToast('El link de Drive no es válido','err');return;}
+  const mod=document.getElementById('f-module').value;
+  const brand=document.getElementById('f-brand').value;
+  const model=mod==='tec'?'-':(document.getElementById('f-model').value||'-');
+  const type=document.getElementById('f-type').value;
+  manuals.unshift({id:nextId++,mod,brand,model,type,name,size:'-',ext:'pdf',date:'Hoy',link:rawLink});
+  document.getElementById('f-name').value='';
+  document.getElementById('f-link').value='';
+  document.getElementById('f-link-preview').className='link-preview';
+  if(mod!==S.module)switchModule(mod);
+  S.brand=brand;S.model='todos';S.filter='todos';
+  renderFilters();updateBreadcrumb();renderCards();renderAdminManualList();
+  logAction('➕','Manual agregado: <strong>'+name+'</strong>'+(fileId?' — con archivo Drive':'— sin archivo'));
+  showToast('Manual agregado'+(fileId?' con archivo':' (sin archivo aún)'),'ok');
+}
+
+// ══ ADMIN PANELS ══
+function renderAdminManualList(){
+  const el=document.getElementById('adminManualList');if(!el)return;
+  el.innerHTML=manuals.length?manuals.map(m=>`
+    <div class="manage-item">
+      <span style="font-size:1rem;flex-shrink:0">${getIcon(m.ext)}</span>
+      <div style="flex:1;min-width:0">
+        <div class="manage-item-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.name}</div>
+        <div class="manage-item-sub">${m.brand}${m.model!=='-'?' · '+m.model:''} · ${m.type}</div>
+        ${m.link?`<div class="manage-item-link">● Drive vinculado</div>`:`<div class="manage-item-nolink">○ Sin archivo</div>`}
+      </div>
+      <button class="btn-sm edit" onclick="closeModal('adminOverlay');openEditManual(${m.id})">✏</button>
+      <button class="btn-sm del" onclick="confirmDeleteManual(${m.id})">🗑</button>
+    </div>`).join(''):'<div class="log-empty">No hay manuales cargados.</div>';
+}
+function renderFlotaTab(){
+  document.getElementById('flota-mec-brands').innerHTML=mecBrands.map(b=>`
+    <div class="manage-item">
+      <div class="brand-icon" style="width:28px;height:28px;font-size:.6rem">${b.sigla}</div>
+      <div style="flex:1"><div class="manage-item-name">${b.name}</div><div class="manage-item-sub">${b.models.length} modelo(s)</div></div>
+      <button class="btn-sm del" onclick="confirmDeleteBrand('mec','${b.name}')">🗑</button>
+    </div>`).join('')||'<div class="log-empty">Sin marcas.</div>';
+  const allModels=mecBrands.flatMap(b=>b.models.map(m=>({brand:b.name,model:m})));
+  document.getElementById('flota-mec-models').innerHTML=allModels.map(x=>`
+    <div class="manage-item">
+      <div style="flex:1"><div class="manage-item-name">${x.model}</div><div class="manage-item-sub">${x.brand}</div></div>
+      <button class="btn-sm del" onclick="confirmDeleteModel('${x.brand}','${x.model}')">🗑</button>
+    </div>`).join('')||'<div class="log-empty">Sin modelos.</div>';
+  document.getElementById('flota-tec-brands').innerHTML=tecBrands.map(b=>`
+    <div class="manage-item">
+      <div class="brand-icon" style="width:28px;height:28px;font-size:.6rem">${b.sigla}</div>
+      <div style="flex:1"><div class="manage-item-name">${b.name}</div></div>
+      <button class="btn-sm del" onclick="confirmDeleteBrand('tec','${b.name}')">🗑</button>
+    </div>`).join('')||'<div class="log-empty">Sin marcas.</div>';
+}
+function renderLog(){
+  const el=document.getElementById('logList');if(!el)return;
+  el.innerHTML=activityLog.length?activityLog.map(l=>`
+    <div class="log-item">
+      <span class="log-icon">${l.icon}</span>
+      <span class="log-text">${l.text}</span>
+      <span class="log-time">${l.time}</span>
+    </div>`).join(''):'<div class="log-empty">Sin actividad registrada aún.</div>';
+}
+function clearLog(){activityLog=[];renderLog();showToast('Historial limpiado','info');}
+function switchAdminTab(name,el){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('atab-'+name).classList.add('active');
+  if(name==='flota')renderFlotaTab();
+  if(name==='log')renderLog();
+  if(name==='manuales')renderAdminManualList();
+}
+
+['viewerModal','addBrandModal','addModelModal','editManualModal','confirmModal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal(id);});
+});
+
+// ══ INIT ══
+renderMecBrands();renderTecBrands();renderFilters();updateBreadcrumb();renderCards();
+</script>
+</body>
+</html>
