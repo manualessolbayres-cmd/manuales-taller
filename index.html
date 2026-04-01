@@ -527,12 +527,19 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 
 <script>
 // ══ CONFIG ══
-const API = 'https://script.google.com/macros/s/AKfycbx7kV9sAoindbPMGupAIKTqbHfVc2njtVaJLiWjnwoX6T4RoEukugOLVWg5VKrJwRavjA/exec';
+const API = 'https://script.google.com/macros/s/AKfycbzOFuAFRL_JMiNd56Kuwei7yZYhqlasEihOBM2WmD69R79vWFWEXTfA99hNpfZlxBKSmA/exec';
 // La contraseña vive en el Apps Script, no acá
+
+// ══ SEGURIDAD ══
+const WRITE_TOKEN = 'slb-2024-xK9mP'; // Token adicional — debe coincidir con Apps Script
+const MAX_INTENTOS = 5;                // Intentos fallidos antes de bloqueo
+const BLOQUEO_MIN  = 10;               // Minutos de bloqueo tras intentos fallidos
+const SESSION_MIN  = 30;               // Minutos de inactividad antes de cerrar sesión
 
 // ══ STATE ══
 const S={module:'mec',brand:'',model:'todos',filter:'todos'};
 let isAdmin=false, addingFor='mec', editingId=null, viewingId=null, nextId=1000;
+let sessionTimer=null;
 let mecBrands=[], tecBrands=[], manuals=[], activityLog=[];
 
 // ══ DRIVE UTILS ══
@@ -563,7 +570,7 @@ async function apiGet(){
 async function apiPost(action, data){
   const res = await fetch(API, {
     method:'POST',
-    body: JSON.stringify({action, data})
+    body: JSON.stringify({action, data, writeToken: WRITE_TOKEN})
   });
   return res.json();
 }
@@ -642,6 +649,52 @@ window.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ══ ADMIN ══
+// ══ LÍMITE DE INTENTOS ══
+function getLoginState(){
+  try{return JSON.parse(localStorage.getItem('slb_login')||'{}');}catch{return {};}
+}
+function setLoginState(obj){localStorage.setItem('slb_login',JSON.stringify(obj));}
+function isBlocked(){
+  const s=getLoginState();
+  if(!s.bloqueadoHasta)return false;
+  if(Date.now()<s.bloqueadoHasta)return true;
+  // bloqueo expirado — resetear
+  setLoginState({intentos:0,bloqueadoHasta:null});
+  return false;
+}
+function registrarIntento(exitoso){
+  const s=getLoginState();
+  if(exitoso){setLoginState({intentos:0,bloqueadoHasta:null});return;}
+  const intentos=(s.intentos||0)+1;
+  if(intentos>=MAX_INTENTOS){
+    setLoginState({intentos,bloqueadoHasta:Date.now()+BLOQUEO_MIN*60000});
+  } else {
+    setLoginState({intentos,bloqueadoHasta:s.bloqueadoHasta||null});
+  }
+}
+function intentosRestantes(){
+  const s=getLoginState();
+  return Math.max(0, MAX_INTENTOS-(s.intentos||0));
+}
+function tiempoBloqueoRestante(){
+  const s=getLoginState();
+  if(!s.bloqueadoHasta)return 0;
+  return Math.ceil((s.bloqueadoHasta-Date.now())/60000);
+}
+
+// ══ EXPIRACIÓN DE SESIÓN ══
+function resetSessionTimer(){
+  if(sessionTimer)clearTimeout(sessionTimer);
+  if(!isAdmin)return;
+  sessionTimer=setTimeout(()=>{
+    logout();
+    showToast('Sesión cerrada por inactividad','info');
+  }, SESSION_MIN*60000);
+}
+// Reiniciar timer en cualquier interacción del admin
+document.addEventListener('click',()=>{if(isAdmin)resetSessionTimer();});
+document.addEventListener('keydown',()=>{if(isAdmin)resetSessionTimer();});
+
 function togglePassVisibility(){
   const inp=document.getElementById('loginPass');
   const btn=document.getElementById('btnEye');
@@ -650,6 +703,12 @@ function togglePassVisibility(){
 }
 function openLogin(){document.getElementById('loginOverlay').classList.add('open');}
 async function checkLogin(){
+  // Verificar bloqueo
+  if(isBlocked()){
+    const mins=tiempoBloqueoRestante();
+    showToast('Cuenta bloqueada. Intentá en '+mins+' min.','err');
+    return;
+  }
   const pass = document.getElementById('loginPass').value;
   if(!pass){showToast('Ingresá la contraseña','err');return;}
   const btn = document.querySelector('#loginOverlay .btn-primary');
@@ -657,17 +716,25 @@ async function checkLogin(){
   try {
     const r = await apiPost('verifyPassword', {password: pass});
     if(r.ok){
+      registrarIntento(true);
       isAdmin=true;
       closeModal('loginOverlay');
       document.getElementById('loginPass').value='';
       applyAdminMode();
+      resetSessionTimer();
       openAdminPanel();
       showToast('Sesión iniciada','ok');
     } else {
+      registrarIntento(false);
       const i=document.getElementById('loginPass');
       i.style.borderColor='var(--danger)';
       setTimeout(()=>i.style.borderColor='',1000);
-      showToast('Contraseña incorrecta','err');
+      if(isBlocked()){
+        showToast('Demasiados intentos. Bloqueado por '+BLOQUEO_MIN+' min.','err');
+      } else {
+        const restantes=intentosRestantes();
+        showToast('Contraseña incorrecta. '+(restantes>0?restantes+' intento'+(restantes!==1?'s':'')+ ' restante'+(restantes!==1?'s':''):'Último intento'),'err');
+      }
     }
   } catch(e) {
     showToast('Error de conexión','err');
@@ -675,7 +742,12 @@ async function checkLogin(){
     btn.disabled=false; btn.textContent='Ingresar';
   }
 }
-function logout(){isAdmin=false;applyAdminMode();showToast('Sesión cerrada','info');}
+function logout(){
+  isAdmin=false;
+  if(sessionTimer){clearTimeout(sessionTimer);sessionTimer=null;}
+  applyAdminMode();
+  showToast('Sesión cerrada','info');
+}
 function openAdminPanel(){
   if(!isAdmin){openLogin();return;}
   document.getElementById('adminOverlay').classList.add('open');
