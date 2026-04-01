@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com;
+  font-src https://fonts.gstatic.com;
+  frame-src https://drive.google.com;
+  connect-src https://script.google.com;
+  img-src 'self' data: https:;
+">
 <title>Directorio de Manuales — Taller</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -536,6 +545,25 @@ const MAX_INTENTOS = 5;                // Intentos fallidos antes de bloqueo
 const BLOQUEO_MIN  = 10;               // Minutos de bloqueo tras intentos fallidos
 const SESSION_MIN  = 30;               // Minutos de inactividad antes de cerrar sesión
 
+// Token CSRF dinámico — se genera una vez por sesión de navegador
+const CSRF_TOKEN = (()=>{
+  let t = sessionStorage.getItem('slb_csrf');
+  if(!t){ t = Math.random().toString(36).slice(2)+Date.now().toString(36); sessionStorage.setItem('slb_csrf',t); }
+  return t;
+})();
+
+// ── Sanitización XSS — escapa HTML antes de insertar en el DOM ──
+function san(str){
+  if(str===null||str===undefined)return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#x27;')
+    .replace(/\//g,'&#x2F;');
+}
+
 // ══ STATE ══
 const S={module:'mec',brand:'',model:'todos',filter:'todos'};
 let isAdmin=false, addingFor='mec', editingId=null, viewingId=null, nextId=1000;
@@ -570,7 +598,7 @@ async function apiGet(){
 async function apiPost(action, data){
   const res = await fetch(API, {
     method:'POST',
-    body: JSON.stringify({action, data, writeToken: WRITE_TOKEN})
+    body: JSON.stringify({action, data, writeToken: WRITE_TOKEN, csrfToken: CSRF_TOKEN})
   });
   return res.json();
 }
@@ -782,26 +810,26 @@ function switchModule(mod){
 // ══ SIDEBAR RENDER ══
 function renderMecBrands(){
   document.getElementById('mec-brands-list').innerHTML=mecBrands.map(b=>`
-    <button class="brand-btn ${S.brand===b.name&&S.module==='mec'?'active-mec':''}" onclick="selectBrand('${b.name}')">
-      <div class="brand-icon">${b.sigla}</div>
-      <span class="brand-name-text">${b.name}</span>
-      <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('mec','${b.name}')">✕</span>
+    <button class="brand-btn ${S.brand===b.name&&S.module==='mec'?'active-mec':''}" onclick="selectBrand('${san(b.name)}')">
+      <div class="brand-icon">${san(b.sigla)}</div>
+      <span class="brand-name-text">${san(b.name)}</span>
+      <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('mec','${san(b.name)}')">✕</span>
     </button>
-    <div class="models-menu ${S.brand===b.name&&S.module==='mec'?'open':''}" id="models-${b.name}">
-      <div class="model-row"><button class="model-btn ${S.model==='todos'&&S.brand===b.name?'active':''}" onclick="selectModel('todos','${b.name}')"><div class="model-dot"></div>Todos los modelos</button></div>
+    <div class="models-menu ${S.brand===b.name&&S.module==='mec'?'open':''}" id="models-${san(b.name)}">
+      <div class="model-row"><button class="model-btn ${S.model==='todos'&&S.brand===b.name?'active':''}" onclick="selectModel('todos','${san(b.name)}')"><div class="model-dot"></div>Todos los modelos</button></div>
       ${b.models.map(m=>`
         <div class="model-row">
-          <button class="model-btn ${S.model===m&&S.brand===b.name?'active':''}" onclick="selectModel('${m}','${b.name}')"><div class="model-dot"></div>${m}</button>
-          <button class="btn-del-model" onclick="confirmDeleteModel('${b.name}','${m}')">✕</button>
+          <button class="model-btn ${S.model===m&&S.brand===b.name?'active':''}" onclick="selectModel('${san(m)}','${san(b.name)}')"><div class="model-dot"></div>${san(m)}</button>
+          <button class="btn-del-model" onclick="confirmDeleteModel('${san(b.name)}','${san(m)}')">✕</button>
         </div>`).join('')}
     </div>`).join('');
 }
 function renderTecBrands(){
   document.getElementById('tec-brands-list').innerHTML=tecBrands.map(b=>`
-    <button class="brand-btn ${S.brand===b.name&&S.module==='tec'?'active-tec':''}" onclick="selectTecBrand('${b.name}')">
-      <div class="brand-icon" style="${S.brand===b.name&&S.module==='tec'?'background:rgba(48,176,208,.15);color:var(--mod-tec);border-color:rgba(48,176,208,.4)':''}">${b.sigla}</div>
-      <span class="brand-name-text">${b.name}</span>
-      <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('tec','${b.name}')">✕</span>
+    <button class="brand-btn ${S.brand===b.name&&S.module==='tec'?'active-tec':''}" onclick="selectTecBrand('${san(b.name)}')">
+      <div class="brand-icon" style="${S.brand===b.name&&S.module==='tec'?'background:rgba(48,176,208,.15);color:var(--mod-tec);border-color:rgba(48,176,208,.4)':''}">${san(b.sigla)}</div>
+      <span class="brand-name-text">${san(b.name)}</span>
+      <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('tec','${san(b.name)}')">✕</span>
     </button>`).join('');
 }
 function selectBrand(brand){S.brand=brand;S.model='todos';S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
@@ -848,22 +876,22 @@ function renderCards(){
     const dis=!m.link?' disabled':'';
     return`<div class="manual-card">
       <div class="card-top">
-        <div class="card-type-badge ${getBadge(m.type)}">${m.type}</div>
+        <div class="card-type-badge ${getBadge(m.type)}">${san(m.type)}</div>
         <div class="card-file-icon">${getIcon(m.ext)}</div>
       </div>
-      <div class="card-title">${m.name}</div>
+      <div class="card-title">${san(m.name)}</div>
       <div class="card-meta">
-        <span class="meta-item">🏷 ${m.brand}${m.model&&m.model!=='-'?' · '+m.model:''}</span>
-        <span class="meta-item"> · ${m.size||'-'} · ${m.date||'-'}</span>
+        <span class="meta-item">🏷 ${san(m.brand)}${m.model&&m.model!=='-'?' · '+san(m.model):''}</span>
+        <span class="meta-item"> · ${san(m.size||'-')} · ${san(m.date||'-')}</span>
         ${m.link?'<span class="meta-item" style="color:var(--success)">● Cargado</span>':'<span class="meta-item" style="color:var(--muted)">○ Sin archivo</span>'}
       </div>
       <div class="card-actions">
-        <button class="btn-view"${dis} onclick="openViewer(${m.id})">Ver manual</button>
-        <button class="btn-dl"${dis} onclick="downloadManual(${m.id})">⬇ Descargar</button>
+        <button class="btn-view"${dis} onclick="openViewer(${Number(m.id)})">Ver manual</button>
+        <button class="btn-dl"${dis} onclick="downloadManual(${Number(m.id)})">⬇ Descargar</button>
       </div>
       <div class="card-admin-actions">
-        <button class="btn-card-edit" onclick="openEditManual(${m.id})">✏ Editar</button>
-        <button class="btn-card-del" onclick="confirmDeleteManual(${m.id})">🗑 Eliminar</button>
+        <button class="btn-card-edit" onclick="openEditManual(${Number(m.id)})">✏ Editar</button>
+        <button class="btn-card-del" onclick="confirmDeleteManual(${Number(m.id)})">🗑 Eliminar</button>
       </div>
     </div>`;
   }).join('');
@@ -885,7 +913,7 @@ function openViewer(id){
     badge.textContent='Archivo cargado';badge.className='viewer-badge ok';
     document.getElementById('btnOpenTab').style.display='';
     document.getElementById('btnDownload').style.display='';
-    wrap.innerHTML=`<iframe class="viewer-iframe" src="${driveEmbedUrl(fileId)}" allowfullscreen></iframe>`;
+    wrap.innerHTML=`<iframe class="viewer-iframe" src="${san(driveEmbedUrl(fileId))}" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" allowfullscreen></iframe>`;
   } else {
     currentViewUrl='';badge.textContent='Sin archivo';badge.className='viewer-badge no';
     document.getElementById('btnOpenTab').style.display='none';
@@ -1086,41 +1114,41 @@ function renderAdminManualList(){
     <div class="manage-item">
       <span style="font-size:.95rem;flex-shrink:0">${getIcon(m.ext)}</span>
       <div style="flex:1;min-width:0">
-        <div class="manage-item-name">${m.name}</div>
-        <div class="manage-item-sub">${m.brand}${m.model&&m.model!=='-'?' · '+m.model:''} · ${m.type}</div>
+        <div class="manage-item-name">${san(m.name)}</div>
+        <div class="manage-item-sub">${san(m.brand)}${m.model&&m.model!=='-'?' · '+san(m.model):''} · ${san(m.type)}</div>
         ${m.link?'<div class="manage-item-link">● Drive vinculado</div>':'<div class="manage-item-nolink">○ Sin archivo</div>'}
       </div>
-      <button class="btn-sm edit" onclick="closeModal('adminOverlay');openEditManual(${m.id})">✏</button>
-      <button class="btn-sm del" onclick="confirmDeleteManual(${m.id})">🗑</button>
+      <button class="btn-sm edit" onclick="closeModal('adminOverlay');openEditManual(${Number(m.id)})">✏</button>
+      <button class="btn-sm del" onclick="confirmDeleteManual(${Number(m.id)})">🗑</button>
     </div>`).join(''):'<div class="log-empty">No hay manuales cargados.</div>';
 }
 function renderFlotaTab(){
   document.getElementById('flota-mec-brands').innerHTML=mecBrands.map(b=>`
     <div class="manage-item">
-      <div class="brand-icon" style="width:26px;height:26px;font-size:.58rem">${b.sigla}</div>
-      <div style="flex:1"><div class="manage-item-name">${b.name}</div><div class="manage-item-sub">${b.models.length} modelo(s)</div></div>
-      <button class="btn-sm del" onclick="confirmDeleteBrand('mec','${b.name}')">🗑</button>
+      <div class="brand-icon" style="width:26px;height:26px;font-size:.58rem">${san(b.sigla)}</div>
+      <div style="flex:1"><div class="manage-item-name">${san(b.name)}</div><div class="manage-item-sub">${b.models.length} modelo(s)</div></div>
+      <button class="btn-sm del" onclick="confirmDeleteBrand('mec','${san(b.name)}')">🗑</button>
     </div>`).join('')||'<div class="log-empty">Sin marcas.</div>';
   const allModels=mecBrands.flatMap(b=>b.models.map(m=>({brand:b.name,model:m})));
   document.getElementById('flota-mec-models').innerHTML=allModels.map(x=>`
     <div class="manage-item">
-      <div style="flex:1"><div class="manage-item-name">${x.model}</div><div class="manage-item-sub">${x.brand}</div></div>
-      <button class="btn-sm del" onclick="confirmDeleteModel('${x.brand}','${x.model}')">🗑</button>
+      <div style="flex:1"><div class="manage-item-name">${san(x.model)}</div><div class="manage-item-sub">${san(x.brand)}</div></div>
+      <button class="btn-sm del" onclick="confirmDeleteModel('${san(x.brand)}','${san(x.model)}')">🗑</button>
     </div>`).join('')||'<div class="log-empty">Sin modelos.</div>';
   document.getElementById('flota-tec-brands').innerHTML=tecBrands.map(b=>`
     <div class="manage-item">
-      <div class="brand-icon" style="width:26px;height:26px;font-size:.58rem">${b.sigla}</div>
-      <div style="flex:1"><div class="manage-item-name">${b.name}</div></div>
-      <button class="btn-sm del" onclick="confirmDeleteBrand('tec','${b.name}')">🗑</button>
+      <div class="brand-icon" style="width:26px;height:26px;font-size:.58rem">${san(b.sigla)}</div>
+      <div style="flex:1"><div class="manage-item-name">${san(b.name)}</div></div>
+      <button class="btn-sm del" onclick="confirmDeleteBrand('tec','${san(b.name)}')">🗑</button>
     </div>`).join('')||'<div class="log-empty">Sin marcas.</div>';
 }
 function renderLog(){
   const el=document.getElementById('logList');if(!el)return;
   el.innerHTML=activityLog.length?activityLog.map(l=>`
     <div class="log-item">
-      <span class="log-icon">${l.icon||'•'}</span>
-      <span class="log-text">${l.text}</span>
-      <span class="log-time">${l.time}</span>
+      <span class="log-icon">${san(l.icon||'•')}</span>
+      <span class="log-text">${san(l.text)}</span>
+      <span class="log-time">${san(l.time)}</span>
     </div>`).join(''):'<div class="log-empty">Sin actividad registrada.</div>';
 }
 async function clearLog(){
