@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src https://fonts.gstatic.com; frame-src https://drive.google.com; connect-src https://script.google.com https://script.googleusercontent.com https://*.googleapis.com https://*.googleusercontent.com; img-src 'self' data: https:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src https://fonts.gstatic.com; frame-src https://drive.google.com https://www.youtube.com; connect-src https://script.google.com https://script.googleusercontent.com https://*.googleapis.com https://*.googleusercontent.com; img-src 'self' data: https:;">
 <title>Directorio de Manuales — Taller</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -12,7 +12,7 @@
   --accent:#e8a020;--accent2:#f0c060;--text:#e8eaf2;
   --muted:#6b7494;--muted2:#9aa3c2;
   --danger:#e05050;--success:#40c080;--teal:#30b0d0;
-  --mod-mec:#e8a020;--mod-tec:#30b0d0;
+  --mod-mec:#e8a020;--mod-tec:#30b0d0;--mod-cur:#a060e0;
   --sidebar-w:270px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -46,12 +46,13 @@ aside.collapsed{width:0;border-right:none;opacity:0;pointer-events:none;}
 .sidebar-backdrop{display:none;position:fixed;inset:0;top:56px;background:rgba(0,0,0,.5);z-index:140;}
 .sidebar-backdrop.visible{display:block;}
 
-.module-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);flex-shrink:0;}
+.module-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border);flex-shrink:0;}
 .module-tab{padding:12px 8px;text-align:center;cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:all .2s;border-bottom:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.2;}
 .module-tab .tab-icon{font-size:1rem;}
 .module-tab:hover{color:var(--text);background:var(--bg3);}
 .module-tab.active-mec{color:var(--mod-mec);border-bottom-color:var(--mod-mec);background:rgba(232,160,32,.06);}
 .module-tab.active-tec{color:var(--mod-tec);border-bottom-color:var(--mod-tec);background:rgba(48,176,208,.06);}
+.module-tab.active-cur{color:var(--mod-cur);border-bottom-color:var(--mod-cur);background:rgba(160,96,224,.06);}
 .sidebar-panel{display:none;flex-direction:column;flex:1;overflow-y:auto;}
 .sidebar-panel.active{display:flex;}
 .sidebar-label{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:.9rem 1.25rem .35rem;}
@@ -59,9 +60,11 @@ aside.collapsed{width:0;border-right:none;opacity:0;pointer-events:none;}
 .brand-btn:hover{background:var(--bg3);color:var(--text);}
 .brand-btn.active-mec{background:var(--bg3);color:var(--mod-mec);border-left:3px solid var(--mod-mec);}
 .brand-btn.active-tec{background:var(--bg3);color:var(--mod-tec);border-left:3px solid var(--mod-tec);}
+.brand-btn.active-cur{background:var(--bg3);color:var(--mod-cur);border-left:3px solid var(--mod-cur);}
 .brand-icon{width:26px;height:26px;border-radius:4px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--muted2);flex-shrink:0;border:1px solid var(--border);text-transform:uppercase;}
 .brand-btn.active-mec .brand-icon{background:rgba(232,160,32,.15);color:var(--mod-mec);border-color:rgba(232,160,32,.4);}
 .brand-btn.active-tec .brand-icon{background:rgba(48,176,208,.15);color:var(--mod-tec);border-color:rgba(48,176,208,.4);}
+.brand-btn.active-cur .brand-icon{background:rgba(160,96,224,.15);color:var(--mod-cur);border-color:rgba(160,96,224,.4);}
 .brand-name-text{flex:1;}
 .btn-del-brand{display:none;padding:2px 5px;background:transparent;border:none;color:var(--muted);font-size:.8rem;cursor:pointer;border-radius:3px;transition:all .15s;flex-shrink:0;}
 .btn-del-brand:hover{color:var(--danger);}
@@ -87,6 +90,7 @@ aside.collapsed{width:0;border-right:none;opacity:0;pointer-events:none;}
 main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .module-bar{height:3px;background:var(--mod-mec);transition:background .3s;flex-shrink:0;}
 .module-bar.tec{background:var(--mod-tec);}
+.module-bar.cur{background:var(--mod-cur);}
 .search-bar{padding:.85rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg2);flex-wrap:wrap;flex-shrink:0;}
 .search-icon{color:var(--muted);flex-shrink:0;}
 .search-input{flex:1;min-width:120px;background:transparent;border:none;outline:none;color:var(--text);font-family:'Barlow',sans-serif;font-size:.92rem;}
@@ -96,6 +100,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .pill:hover{border-color:var(--muted2);color:var(--text);}
 .pill.active-all-mec{background:rgba(232,160,32,.12);border-color:var(--mod-mec);color:var(--mod-mec);}
 .pill.active-all-tec{background:rgba(48,176,208,.12);border-color:var(--mod-tec);color:var(--mod-tec);}
+.pill.active-all-cur{background:rgba(160,96,224,.12);border-color:var(--mod-cur);color:var(--mod-cur);}
 .pill.active-despiece{background:rgba(224,80,80,.12);border-color:var(--danger);color:var(--danger);}
 .pill.active-tecnico{background:rgba(48,176,208,.12);border-color:var(--teal);color:var(--teal);}
 .pill.active-mecanico{background:rgba(64,192,128,.12);border-color:var(--success);color:var(--success);}
@@ -105,6 +110,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .mod-badge{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;}
 .mod-badge.mec{background:rgba(232,160,32,.15);color:var(--mod-mec);border:1px solid rgba(232,160,32,.3);}
 .mod-badge.tec{background:rgba(48,176,208,.15);color:var(--mod-tec);border:1px solid rgba(48,176,208,.3);}
+.mod-badge.cur{background:rgba(160,96,224,.15);color:var(--mod-cur);border:1px solid rgba(160,96,224,.3);}
 .grid-header{padding:.65rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .grid-title{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;color:var(--text);}
 .grid-count{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg3);border:1px solid var(--border);padding:2px 9px;border-radius:3px;}
@@ -280,6 +286,9 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
       <button class="module-tab" id="tab-tec" onclick="switchModule('tec')">
         <span class="tab-icon">⚙️</span>Técnico
       </button>
+      <button class="module-tab" id="tab-cur" onclick="switchModule('cur')">
+        <span class="tab-icon">🎓</span>Cursos
+      </button>
     </div>
     <div class="sidebar-panel active" id="panel-mec">
       <div class="sidebar-label">Vehículos</div>
@@ -295,6 +304,14 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
       <hr class="sidebar-divider">
       <div class="sidebar-label" id="lbl-add-tec" style="display:none">Agregar</div>
       <button class="btn-add-new" onclick="openAddBrand('tec')"><div class="add-icon">+</div>Nueva marca</button>
+    </div>
+
+    <div class="sidebar-panel" id="panel-cur">
+      <div class="sidebar-label">Proveedores</div>
+      <div id="cur-brands-list"></div>
+      <hr class="sidebar-divider">
+      <div class="sidebar-label" id="lbl-add-cur" style="display:none">Agregar</div>
+      <button class="btn-add-new" onclick="openAddBrand('cur')"><div class="add-icon">+</div>Nuevo proveedor</button>
     </div>
   </aside>
 
@@ -461,6 +478,7 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
         <select class="form-select" id="f-module" onchange="updateAdminForm()">
           <option value="mec">🔧 Mecánico</option>
           <option value="tec">⚙️ Técnico</option>
+          <option value="cur">🎓 Cursos</option>
         </select>
       </div>
       <div class="form-row">
@@ -483,6 +501,9 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
           <option value="Despiece">Despiece</option>
           <option value="Técnico">Técnico</option>
           <option value="Mecánico">Mecánico</option>
+          <option value="Teórico">Teórico</option>
+          <option value="Práctico">Práctico</option>
+          <option value="Seguridad">Seguridad</option>
         </select>
       </div>
       <div class="form-row">
@@ -510,6 +531,8 @@ main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
       <div class="manage-list" id="flota-mec-models"></div>
       <div class="admin-section-title" style="margin-top:.5rem">Marcas — Técnico</div>
       <div class="manage-list" id="flota-tec-brands"></div>
+      <div class="admin-section-title" style="margin-top:.5rem">Proveedores — Cursos</div>
+      <div class="manage-list" id="flota-cur-brands"></div>
     </div>
 
     <div class="admin-tab-panel" id="atab-log">
@@ -560,7 +583,7 @@ function san(str){
 const S={module:'mec',brand:'',model:'todos',filter:'todos'};
 let isAdmin=false, addingFor='mec', editingId=null, viewingId=null, nextId=1000;
 let sessionTimer=null;
-let mecBrands=[], tecBrands=[], manuals=[], activityLog=[];
+let mecBrands=[], tecBrands=[], curBrands=[], manuals=[], activityLog=[];
 
 // ══ DRIVE UTILS ══
 function parseDriveLink(url){
@@ -571,15 +594,37 @@ function parseDriveLink(url){
   if(m)return m[1];
   return null;
 }
+function parseYouTubeLink(url){
+  if(!url||!url.trim())return null;
+  let m=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if(m)return m[1];
+  m=url.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/);
+  if(m)return m[1];
+  return null;
+}
+function isYouTubeLink(url){return !!parseYouTubeLink(url);}
+function youtubeEmbedUrl(id){return`https://www.youtube.com/embed/${id}`;}
 function driveEmbedUrl(id){return`https://drive.google.com/file/d/${id}/preview`;}
 function driveDownloadUrl(id){return`https://drive.google.com/uc?export=download&id=${id}`;}
 function driveViewUrl(id){return`https://drive.google.com/file/d/${id}/view`;}
 function validateDriveLink(val,prevId,errId){
   const prev=document.getElementById(prevId),err=document.getElementById(errId);
   if(!val.trim()){prev.className='link-preview';err.className='link-error';return null;}
-  const id=parseDriveLink(val);
-  if(id){prev.className='link-preview visible';prev.textContent='✓ Link válido — ID: '+id;err.className='link-error';return id;}
-  else{err.className='link-error visible';err.textContent='Link no reconocido. Usá el link "Compartir" de Google Drive.';prev.className='link-preview';return null;}
+  const ytId=parseYouTubeLink(val);
+  if(ytId){
+    prev.className='link-preview visible';
+    prev.textContent='✓ Video de YouTube — ID: '+ytId;
+    err.className='link-error';return ytId;
+  }
+  const driveId=parseDriveLink(val);
+  if(driveId){
+    prev.className='link-preview visible';
+    prev.textContent='✓ Link válido de Drive — ID: '+driveId;
+    err.className='link-error';return driveId;
+  }
+  err.className='link-error visible';
+  err.textContent='Link no reconocido. Usá un link de Google Drive o YouTube.';
+  prev.className='link-preview';return null;
 }
 
 // ══ API ══
@@ -622,6 +667,9 @@ async function loadData(){
       ];
     }
 
+    // Reconstruir proveedores de cursos
+    curBrands = d.marcas.filter(b=>b.mod==='cur').map(b=>({name:b.name,sigla:b.sigla}));
+
     manuals = d.manuales.map(m=>({...m, id:Number(m.id)||nextId++}));
     activityLog = d.log || [];
 
@@ -631,6 +679,7 @@ async function loadData(){
     document.getElementById('loadingScreen').classList.add('hidden');
     renderMecBrands();
     renderTecBrands();
+    renderCurBrands();
     renderFilters();
     updateBreadcrumb();
     renderCards();
@@ -642,7 +691,10 @@ async function loadData(){
 }
 
 // ══ UTILS ══
-function getIcon(ext){return{pdf:'📄',jpg:'🖼',png:'🖼',jpeg:'🖼',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊'}[ext]||'📁';}
+function getIcon(ext,link){
+  if(link&&parseYouTubeLink(link))return '🎬';
+  return{pdf:'📄',jpg:'🖼',png:'🖼',jpeg:'🖼',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊'}[ext]||'📁';
+}
 function getBadge(t){return{Despiece:'badge-despiece',Técnico:'badge-tecnico',Mecánico:'badge-mecanico'}[t]||'';}
 function today(){return new Date().toLocaleDateString('es-AR');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -778,6 +830,7 @@ function applyAdminMode(){
   document.getElementById('manualsGrid').classList.toggle('admin-active',isAdmin);
   document.getElementById('lbl-add-mec').style.display=isAdmin?'':'none';
   document.getElementById('lbl-add-tec').style.display=isAdmin?'':'none';
+  document.getElementById('lbl-add-cur').style.display=isAdmin?'':'none';
   document.getElementById('adminIndicator').classList.toggle('visible',isAdmin);
   document.getElementById('btnAdminPanel').style.display=isAdmin?'':'none';
   document.getElementById('btnLogout').style.display=isAdmin?'':'none';
@@ -790,12 +843,15 @@ function switchModule(mod){
   S.module=mod;S.filter='todos';
   document.getElementById('tab-mec').className='module-tab'+(mod==='mec'?' active-mec':'');
   document.getElementById('tab-tec').className='module-tab'+(mod==='tec'?' active-tec':'');
+  document.getElementById('tab-cur').className='module-tab'+(mod==='cur'?' active-cur':'');
   document.getElementById('panel-mec').className='sidebar-panel'+(mod==='mec'?' active':'');
   document.getElementById('panel-tec').className='sidebar-panel'+(mod==='tec'?' active':'');
-  document.getElementById('moduleBar').className='module-bar'+(mod==='tec'?' tec':'');
+  document.getElementById('panel-cur').className='sidebar-panel'+(mod==='cur'?' active':'');
+  document.getElementById('moduleBar').className='module-bar'+(mod==='tec'?' tec':mod==='cur'?' cur':'');
   if(mod==='mec'){S.brand=mecBrands[0]?.name||'';S.model='todos';}
-  else{S.brand=tecBrands[0]?.name||'';S.model='-';}
-  renderMecBrands();renderTecBrands();renderFilters();updateBreadcrumb();renderCards();
+  else if(mod==='tec'){S.brand=tecBrands[0]?.name||'';S.model='-';}
+  else{S.brand=curBrands[0]?.name||'';S.model='-';}
+  renderMecBrands();renderTecBrands();renderCurBrands();renderFilters();updateBreadcrumb();renderCards();
   if(window.innerWidth<=768)closeSidebarMobile();
 }
 
@@ -824,31 +880,50 @@ function renderTecBrands(){
       <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('tec','${san(b.name)}')">✕</span>
     </button>`).join('');
 }
+function renderCurBrands(){
+  const el=document.getElementById('cur-brands-list');
+  if(!el)return;
+  el.innerHTML=curBrands.length?curBrands.map(b=>`
+    <button class="brand-btn ${S.brand===b.name&&S.module==='cur'?'active-cur':''}" onclick="selectCurBrand('${san(b.name)}')">
+      <div class="brand-icon" style="${S.brand===b.name&&S.module==='cur'?'background:rgba(160,96,224,.15);color:var(--mod-cur);border-color:rgba(160,96,224,.4)':''}">${san(b.sigla)}</div>
+      <span class="brand-name-text">${san(b.name)}</span>
+      <span class="btn-del-brand" onclick="event.stopPropagation();confirmDeleteBrand('cur','${san(b.name)}')">✕</span>
+    </button>`).join(''):'<div style="padding:.75rem 1.25rem;font-size:.82rem;color:var(--muted)">Sin proveedores aún. Agregá el primero desde el panel admin.</div>';
+}
+function selectCurBrand(name){S.brand=name;S.model='-';S.filter='todos';renderCurBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
 function selectBrand(brand){S.brand=brand;S.model='todos';S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
 function selectTecBrand(name){S.brand=name;S.model='-';S.filter='todos';renderTecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
 function selectModel(model,brand){S.model=model;S.filter='todos';renderMecBrands();renderFilters();updateBreadcrumb();renderCards();if(window.innerWidth<=768)closeSidebarMobile();}
 
 // ══ FILTERS ══
 function renderFilters(){
-  const ac=S.module==='mec'?'active-all-mec':'active-all-tec';
-  document.getElementById('filterPills').innerHTML=`
-    <button class="pill ${S.filter==='todos'?ac:''}" onclick="setFilter('todos')">Todos</button>
-    <button class="pill ${S.filter==='Despiece'?'active-despiece':''}" onclick="setFilter('Despiece')">Despiece</button>
-    <button class="pill ${S.filter==='Técnico'?'active-tecnico':''}" onclick="setFilter('Técnico')">Técnico</button>
-    <button class="pill ${S.filter==='Mecánico'?'active-mecanico':''}" onclick="setFilter('Mecánico')">Mecánico</button>`;
+  const ac=S.module==='mec'?'active-all-mec':S.module==='tec'?'active-all-tec':'active-all-cur';
+  if(S.module==='cur'){
+    document.getElementById('filterPills').innerHTML=`
+      <button class="pill ${S.filter==='todos'?ac:''}" onclick="setFilter('todos')">Todos</button>
+      <button class="pill ${S.filter==='Teórico'?'active-tecnico':''}" onclick="setFilter('Teórico')">Teórico</button>
+      <button class="pill ${S.filter==='Práctico'?'active-mecanico':''}" onclick="setFilter('Práctico')">Práctico</button>
+      <button class="pill ${S.filter==='Seguridad'?'active-despiece':''}" onclick="setFilter('Seguridad')">Seguridad</button>`;
+  } else {
+    document.getElementById('filterPills').innerHTML=`
+      <button class="pill ${S.filter==='todos'?ac:''}" onclick="setFilter('todos')">Todos</button>
+      <button class="pill ${S.filter==='Despiece'?'active-despiece':''}" onclick="setFilter('Despiece')">Despiece</button>
+      <button class="pill ${S.filter==='Técnico'?'active-tecnico':''}" onclick="setFilter('Técnico')">Técnico</button>
+      <button class="pill ${S.filter==='Mecánico'?'active-mecanico':''}" onclick="setFilter('Mecánico')">Mecánico</button>`;
+  }
 }
 function setFilter(f){S.filter=f;renderFilters();renderCards();}
 
 // ══ BREADCRUMB ══
 function updateBreadcrumb(){
-  const badge=`<span class="mod-badge ${S.module}">${S.module==='mec'?'🔧 Mecánico':'⚙️ Técnico'}</span>`;
+  const badge=`<span class="mod-badge ${S.module}">${S.module==='mec'?'🔧 Mecánico':S.module==='tec'?'⚙️ Técnico':'🎓 Cursos'}</span>`;
   if(S.module==='mec'){
     const ml=S.model==='todos'?'Todos los modelos':S.model;
-    document.getElementById('breadcrumb').innerHTML=`${badge}<span class="sep">›</span><strong>${S.brand}</strong><span class="sep">›</span><span>${ml}</span>`;
+    document.getElementById('breadcrumb').innerHTML=`${badge}<span class="sep">›</span><strong>${san(S.brand)}</strong><span class="sep">›</span><span>${san(ml)}</span>`;
     document.getElementById('gridTitle').textContent=S.model==='todos'?'Todos — '+S.brand:S.brand+' '+S.model;
   } else {
-    document.getElementById('breadcrumb').innerHTML=`${badge}<span class="sep">›</span><strong>${S.brand}</strong>`;
-    document.getElementById('gridTitle').textContent=S.brand;
+    document.getElementById('breadcrumb').innerHTML=`${badge}<span class="sep">›</span><strong>${san(S.brand)}</strong>`;
+    document.getElementById('gridTitle').textContent=S.brand||(S.module==='cur'?'Seleccioná un proveedor':'');
   }
 }
 
@@ -869,7 +944,7 @@ function renderCards(){
     return`<div class="manual-card">
       <div class="card-top">
         <div class="card-type-badge ${getBadge(m.type)}">${san(m.type)}</div>
-        <div class="card-file-icon">${getIcon(m.ext)}</div>
+        <div class="card-file-icon">${getIcon(m.ext,m.link)}</div>
       </div>
       <div class="card-title">${san(m.name)}</div>
       <div class="card-meta">
@@ -878,8 +953,8 @@ function renderCards(){
         ${m.link?'<span class="meta-item" style="color:var(--success)">● Cargado</span>':'<span class="meta-item" style="color:var(--muted)">○ Sin archivo</span>'}
       </div>
       <div class="card-actions">
-        <button class="btn-view"${dis} onclick="openViewer(${Number(m.id)})">Ver manual</button>
-        <button class="btn-dl"${dis} onclick="downloadManual(${Number(m.id)})">⬇ Descargar</button>
+        <button class="btn-view"${dis} onclick="openViewer(${Number(m.id)})">${m.link&&parseYouTubeLink(m.link)?'▶ Ver video':'Ver manual'}</button>
+        <button class="btn-dl"${dis&&!parseYouTubeLink(m.link||'')?dis:m.link&&parseYouTubeLink(m.link)?'style="display:none"':dis} onclick="downloadManual(${Number(m.id)})">⬇ Descargar</button>
       </div>
       <div class="card-admin-actions">
         <button class="btn-card-edit" onclick="openEditManual(${Number(m.id)})">✏ Editar</button>
@@ -899,13 +974,22 @@ function openViewer(id){
   document.getElementById('viewerFilename').textContent=m.brand+(m.model&&m.model!=='-'?' · '+m.model:'')+' · '+m.type;
   const wrap=document.getElementById('viewerFrameWrap');
   const badge=document.getElementById('viewerBadge');
-  const fileId=m.link?parseDriveLink(m.link):null;
-  if(fileId){
-    currentViewUrl=driveViewUrl(fileId);
+
+  const ytId=m.link?parseYouTubeLink(m.link):null;
+  const driveId=m.link&&!ytId?parseDriveLink(m.link):null;
+
+  if(ytId){
+    currentViewUrl=m.link;
+    badge.textContent='Video YouTube';badge.className='viewer-badge ok';
+    document.getElementById('btnOpenTab').style.display='';
+    document.getElementById('btnDownload').style.display='none';
+    wrap.innerHTML=`<iframe class="viewer-iframe" src="${san(youtubeEmbedUrl(ytId))}" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" allowfullscreen></iframe>`;
+  } else if(driveId){
+    currentViewUrl=driveViewUrl(driveId);
     badge.textContent='Archivo cargado';badge.className='viewer-badge ok';
     document.getElementById('btnOpenTab').style.display='';
     document.getElementById('btnDownload').style.display='';
-    wrap.innerHTML=`<iframe class="viewer-iframe" src="${san(driveEmbedUrl(fileId))}" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" allowfullscreen></iframe>`;
+    wrap.innerHTML=`<iframe class="viewer-iframe" src="${san(driveEmbedUrl(driveId))}" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" allowfullscreen></iframe>`;
   } else {
     currentViewUrl='';badge.textContent='Sin archivo';badge.className='viewer-badge no';
     document.getElementById('btnOpenTab').style.display='none';
@@ -913,7 +997,7 @@ function openViewer(id){
     wrap.innerHTML=`<div class="viewer-nolink">
       <div class="viewer-nolink-icon">📂</div>
       <div class="viewer-nolink-title">Archivo no cargado aún</div>
-      <div class="viewer-nolink-text">${isAdmin?'Editá el manual desde el panel de administración para agregar el link de Drive.':'Consultá al administrador.'}</div>
+      <div class="viewer-nolink-text">${isAdmin?'Editá el elemento desde el panel de administración para agregar el link.':'Consultá al administrador.'}</div>
     </div>`;
   }
   document.getElementById('viewerModal').classList.add('open');
@@ -976,8 +1060,9 @@ function confirmDeleteManual(id){
 // ══ DELETE BRAND ══
 function confirmDeleteBrand(mod,name){
   if(!isAdmin)return;
-  document.getElementById('confirmTitle').textContent='¿Eliminar marca?';
-  document.getElementById('confirmText').innerHTML='Vas a eliminar <strong>"'+name+'"</strong> y todos sus manuales.';
+  const label=mod==='cur'?'proveedor':'marca';
+  document.getElementById('confirmTitle').textContent='¿Eliminar '+label+'?';
+  document.getElementById('confirmText').innerHTML='Vas a eliminar <strong>"'+name+'"</strong> y todos sus elementos asociados.';
   document.getElementById('confirmBtn').onclick=async()=>{
     const r=await apiPost('deleteMarca',{mod,name});
     if(!r.ok){showToast('Error al eliminar','err');return;}
@@ -986,14 +1071,20 @@ function confirmDeleteBrand(mod,name){
       manuals=manuals.filter(m=>!(m.mod==='mec'&&m.brand===name));
       if(S.brand===name&&mecBrands.length){S.brand=mecBrands[0].name;S.model='todos';}
       renderMecBrands();
-    } else {
+    } else if(mod==='tec'){
       const i=tecBrands.findIndex(x=>x.name===name);if(i>-1)tecBrands.splice(i,1);
       manuals=manuals.filter(m=>!(m.mod==='tec'&&m.brand===name));
       if(S.brand===name&&tecBrands.length)S.brand=tecBrands[0].name;
       renderTecBrands();
+    } else {
+      const i=curBrands.findIndex(x=>x.name===name);if(i>-1)curBrands.splice(i,1);
+      manuals=manuals.filter(m=>!(m.mod==='cur'&&m.brand===name));
+      if(S.brand===name&&curBrands.length)S.brand=curBrands[0].name;
+      else if(!curBrands.length)S.brand='';
+      renderCurBrands();
     }
     closeModal('confirmModal');updateBreadcrumb();renderCards();renderFlotaTab();renderAdminManualList();
-    showToast('Marca eliminada','err');
+    showToast((mod==='cur'?'Proveedor':'Marca')+' eliminado','err');
   };
   document.getElementById('confirmModal').classList.add('open');
 }
@@ -1021,8 +1112,9 @@ function openAddBrand(mod){
   if(!isAdmin)return;
   addingFor=mod;
   const t=document.getElementById('addBrandTitle');
-  t.textContent=mod==='mec'?'Nueva marca — Mecánico':'Nueva marca — Técnico';
-  t.className='modal-title '+(mod==='mec'?'mec':'tec');
+  const labels={mec:'Nueva marca — Mecánico',tec:'Nueva marca — Técnico',cur:'Nuevo proveedor — Cursos'};
+  t.textContent=labels[mod]||'Nueva marca';
+  t.className='modal-title '+(mod==='mec'?'mec':mod==='cur'?'cur':'tec');
   document.getElementById('newBrandName').value='';
   document.getElementById('newBrandSigla').value='';
   document.getElementById('addBrandModal').classList.add('open');
@@ -1036,9 +1128,10 @@ async function confirmAddBrand(){
   setBusy('btnAddBrand',false,'+ Agregar marca');
   if(!r.ok){showToast('Error al guardar','err');return;}
   if(addingFor==='mec'){mecBrands.push({name,sigla,models:[]});renderMecBrands();}
-  else{tecBrands.push({name,sigla});renderTecBrands();}
+  else if(addingFor==='tec'){tecBrands.push({name,sigla});renderTecBrands();}
+  else{curBrands.push({name,sigla});renderCurBrands();}
   closeModal('addBrandModal');renderFlotaTab();renderAdminManualList();
-  showToast('Marca "'+name+'" agregada','ok');
+  showToast((addingFor==='cur'?'Proveedor':'Marca')+' "'+name+'" agregado','ok');
 }
 
 // ══ ADD MODEL ══
@@ -1065,12 +1158,27 @@ async function confirmAddModel(){
 // ══ ADD MANUAL ══
 function updateAdminForm(){
   const mod=document.getElementById('f-module').value;
-  document.getElementById('f-brand').innerHTML=(mod==='mec'?mecBrands:tecBrands).map(b=>`<option value="${b.name}">${b.name}</option>`).join('');
-  document.getElementById('f-model-row').style.display=mod==='tec'?'none':'';
+  const brands=mod==='mec'?mecBrands:mod==='tec'?tecBrands:curBrands;
+  document.getElementById('f-brand').innerHTML=brands.map(b=>`<option value="${b.name}">${b.name}</option>`).join('');
+  document.getElementById('f-model-row').style.display=mod==='mec'?'':'none';
+  // Cambiar placeholder del link según módulo
+  const linkInput=document.getElementById('f-link');
+  if(mod==='cur'){
+    linkInput.placeholder='https://drive.google.com/... o https://youtube.com/watch?v=...';
+  } else {
+    linkInput.placeholder='https://drive.google.com/file/d/XXXX/view?usp=sharing';
+  }
+  // Actualizar tipos disponibles
+  const typeSelect=document.getElementById('f-type');
+  if(mod==='cur'){
+    typeSelect.innerHTML=`<option value="Teórico">Teórico</option><option value="Práctico">Práctico</option><option value="Seguridad">Seguridad</option>`;
+  } else {
+    typeSelect.innerHTML=`<option value="Despiece">Despiece</option><option value="Técnico">Técnico</option><option value="Mecánico">Mecánico</option>`;
+  }
   updateAdminModels();
 }
 function updateAdminModels(){
-  if(document.getElementById('f-module').value==='tec')return;
+  if(document.getElementById('f-module').value!=='mec')return;
   const b=mecBrands.find(x=>x.name===document.getElementById('f-brand').value);
   document.getElementById('f-model').innerHTML=(b?b.models:[]).map(m=>`<option value="${m}">${m}</option>`).join('');
 }
@@ -1133,6 +1241,12 @@ function renderFlotaTab(){
       <div style="flex:1"><div class="manage-item-name">${san(b.name)}</div></div>
       <button class="btn-sm del" onclick="confirmDeleteBrand('tec','${san(b.name)}')">🗑</button>
     </div>`).join('')||'<div class="log-empty">Sin marcas.</div>';
+  document.getElementById('flota-cur-brands').innerHTML=curBrands.map(b=>`
+    <div class="manage-item">
+      <div class="brand-icon" style="width:26px;height:26px;font-size:.58rem;background:rgba(160,96,224,.15);color:var(--mod-cur);border-color:rgba(160,96,224,.4)">${san(b.sigla)}</div>
+      <div style="flex:1"><div class="manage-item-name">${san(b.name)}</div></div>
+      <button class="btn-sm del" onclick="confirmDeleteBrand('cur','${san(b.name)}')">🗑</button>
+    </div>`).join('')||'<div class="log-empty">Sin proveedores.</div>';
 }
 function renderLog(){
   const el=document.getElementById('logList');if(!el)return;
